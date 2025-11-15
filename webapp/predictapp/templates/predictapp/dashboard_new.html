@@ -1,0 +1,395 @@
+{% extends 'predictapp/base.html' %}
+
+{% block title %}SignSpeak - Learning Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <!-- Welcome Section -->
+    <div class="text-center mb-12">
+        <h1 class="text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+            Learning Dashboard
+        </h1>
+        <p class="text-xl text-gray-600">Track your progress and continue your ASL learning journey</p>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="glass-effect rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow">
+            <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-bolt text-2xl text-yellow-600"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800" id="xpPoints">0</div>
+            <div class="text-gray-600 font-medium">XP Points</div>
+        </div>
+        
+        <div class="glass-effect rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-fire text-2xl text-red-600"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800" id="currentStreak">0</div>
+            <div class="text-gray-600 font-medium">Current Streak</div>
+        </div>
+        
+        <div class="glass-effect rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow">
+            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-trophy text-2xl text-purple-600"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800" id="longestStreak">0</div>
+            <div class="text-gray-600 font-medium">Longest Streak</div>
+        </div>
+        
+        <div class="glass-effect rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-shadow">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-chart-line text-2xl text-blue-600"></i>
+            </div>
+            <div class="text-3xl font-bold text-gray-800" id="weeklyXP">0</div>
+            <div class="text-gray-600 font-medium">Weekly XP</div>
+        </div>
+    </div>
+
+    <!-- Games Section -->
+    <div class="glass-effect rounded-3xl p-8 mb-12 shadow-xl">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
+            <i class="fas fa-gamepad text-purple-600 mr-3"></i>
+            Learning Games
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="gradient-bg text-white p-6 rounded-2xl cursor-pointer transition-all transform hover:scale-105 shadow-lg" onclick="startGame('sign_race')">
+                <div class="text-4xl mb-4 text-center">🏃‍♂️</div>
+                <div class="text-xl font-bold mb-2">Sign Race</div>
+                <div class="text-sm opacity-90">Sign letters as fast as you can!</div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-500 to-teal-600 text-white p-6 rounded-2xl cursor-pointer transition-all transform hover:scale-105 shadow-lg" onclick="startGame('memory_match')">
+                <div class="text-4xl mb-4 text-center">🧠</div>
+                <div class="text-xl font-bold mb-2">Memory Match</div>
+                <div class="text-sm opacity-90">Remember and sign word sequences</div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-orange-500 to-red-600 text-white p-6 rounded-2xl cursor-pointer transition-all transform hover:scale-105 shadow-lg" onclick="startGame('daily_challenge')">
+                <div class="text-4xl mb-4 text-center">📅</div>
+                <div class="text-xl font-bold mb-2">Daily Challenge</div>
+                <div class="text-sm opacity-90">Complete today's special challenge</div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 rounded-2xl cursor-pointer transition-all transform hover:scale-105 shadow-lg" onclick="startRealTimeDetection()">
+                <div class="text-4xl mb-4 text-center">📹</div>
+                <div class="text-xl font-bold mb-2">ASL Recognition Model</div>
+                <div class="text-sm opacity-90">Use original model with camera or upload images</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Achievements Section -->
+        <div class="glass-effect rounded-3xl p-8 shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-medal text-yellow-600 mr-2"></i>
+                Achievements
+            </h2>
+            <div class="grid grid-cols-2 gap-4" id="achievementsGrid">
+                <!-- Achievements will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="glass-effect rounded-3xl p-8 shadow-xl">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-crown text-yellow-600 mr-2"></i>
+                Weekly Leaderboard
+            </h2>
+            <div id="leaderboardContainer" class="space-y-3">
+                <!-- Leaderboard will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="glass-effect rounded-3xl p-8 mt-8 shadow-xl">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            <i class="fas fa-chart-bar text-blue-600 mr-2"></i>
+            Learning Progress
+        </h2>
+        <div id="progressContainer" class="space-y-4">
+            <!-- Progress items will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Game Modal -->
+<div id="gameModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+    <div class="glass-effect rounded-3xl p-8 max-w-md w-full text-center">
+        <span class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 cursor-pointer text-2xl" onclick="closeModal()">&times;</span>
+        <div id="gameContent">
+            <!-- Game content will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentUser = null;
+    let gameData = null;
+    let gameTimer = null;
+    let gameStartTime = null;
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        loadDashboard();
+    });
+
+    async function loadDashboard() {
+        try {
+            const response = await fetch('/api/gamification/dashboard/', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                updateDashboard(data);
+            } else {
+                console.error('Failed to load dashboard');
+            }
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+        }
+    }
+
+    function updateDashboard(data) {
+        // Update stats
+        document.getElementById('xpPoints').textContent = data.user_stats.xp_points;
+        document.getElementById('currentStreak').textContent = data.user_stats.current_streak;
+        document.getElementById('longestStreak').textContent = data.user_stats.longest_streak;
+        document.getElementById('weeklyXP').textContent = data.user_stats.weekly_xp;
+
+        // Update achievements
+        const achievementsGrid = document.getElementById('achievementsGrid');
+        achievementsGrid.innerHTML = '';
+        
+        data.achievements.forEach(achievement => {
+            const achievementCard = document.createElement('div');
+            achievementCard.className = 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white p-4 rounded-xl text-center shadow-lg';
+            achievementCard.innerHTML = `
+                <div class="text-2xl mb-2">${achievement.icon}</div>
+                <div class="font-bold text-sm">${achievement.name}</div>
+            `;
+            achievementsGrid.appendChild(achievementCard);
+        });
+
+        // Update progress
+        const progressContainer = document.getElementById('progressContainer');
+        progressContainer.innerHTML = '';
+        
+        data.skill_progress.forEach(skill => {
+            const progressItem = document.createElement('div');
+            progressItem.className = 'bg-gray-50 p-4 rounded-xl';
+            progressItem.innerHTML = `
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-medium text-gray-800">${skill.skill_name}</span>
+                    <span class="text-sm text-gray-600">${Math.round(skill.progress)}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="gradient-bg h-3 rounded-full transition-all duration-300" style="width: ${skill.progress}%"></div>
+                </div>
+            `;
+            progressContainer.appendChild(progressItem);
+        });
+
+        // Load leaderboard
+        loadLeaderboard();
+    }
+
+    async function loadLeaderboard() {
+        try {
+            const response = await fetch('/api/gamification/leaderboard/?period=weekly', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const leaderboardContainer = document.getElementById('leaderboardContainer');
+                leaderboardContainer.innerHTML = '';
+                
+                data.forEach((entry, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-xl';
+                    item.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold ${index < 3 ? 'gradient-bg text-white' : 'bg-gray-200 text-gray-600'}">
+                                ${entry.rank}
+                            </div>
+                            <span class="font-medium">${entry.username}</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-purple-600">${entry.total_xp} XP</div>
+                            <div class="text-xs text-gray-500">Level ${entry.level}</div>
+                        </div>
+                    `;
+                    leaderboardContainer.appendChild(item);
+                });
+            }
+        } catch (error) {
+            console.error('Error loading leaderboard:', error);
+        }
+    }
+
+    async function startGame(gameMode) {
+        try {
+            const response = await fetch('/api/gamification/start-game/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                },
+                body: JSON.stringify({ game_mode: gameMode })
+            });
+
+            if (response.ok) {
+                gameData = await response.json();
+                showGameModal(gameMode);
+            }
+        } catch (error) {
+            console.error('Error starting game:', error);
+        }
+    }
+
+    function showGameModal(gameMode) {
+        const modal = document.getElementById('gameModal');
+        const gameContent = document.getElementById('gameContent');
+        
+        if (gameMode === 'sign_race') {
+            gameContent.innerHTML = `
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">🏃‍♂️ Sign Race</h2>
+                <p class="text-gray-600 mb-6">${gameData.instructions}</p>
+                <div class="text-4xl font-bold text-purple-600 mb-4" id="currentLetter">${gameData.challenge[0]}</div>
+                <div class="flex justify-between mb-6">
+                    <div>Time: <span id="timer" class="font-bold">60</span>s</div>
+                    <div>Score: <span id="score" class="font-bold">0</span></div>
+                </div>
+                <button class="gradient-bg text-white px-8 py-3 rounded-xl font-semibold w-full" onclick="startRaceGame()">Start Game</button>
+            `;
+        } else if (gameMode === 'daily_challenge') {
+            gameContent.innerHTML = `
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📅 ${gameData.title}</h2>
+                <p class="text-gray-600 mb-4">${gameData.description}</p>
+                <div class="mb-6">
+                    <strong>Signs to complete:</strong>
+                    <div class="flex flex-wrap gap-2 justify-center mt-2">
+                        ${gameData.target_signs.map(sign => `<span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">${sign}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="mb-4">Reward: <span class="font-bold text-green-600">${gameData.xp_reward} XP</span></div>
+                <button class="gradient-bg text-white px-8 py-3 rounded-xl font-semibold w-full" onclick="startDailyChallenge()">Start Challenge</button>
+            `;
+        }
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function startRealTimeDetection() {
+        window.location.href = '/predict/';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('gameModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        if (gameTimer) {
+            clearInterval(gameTimer);
+            gameTimer = null;
+        }
+    }
+
+    function startRaceGame() {
+        // Simulate game logic
+        let currentIndex = 0;
+        let score = 0;
+        let timeLeft = 60;
+        
+        gameStartTime = Date.now();
+        
+        gameTimer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                endGame('sign_race', score, (score / gameData.challenge.length) * 100);
+            }
+        }, 1000);
+        
+        // Simulate automatic progression for demo
+        const progressInterval = setInterval(() => {
+            if (currentIndex < gameData.challenge.length - 1) {
+                currentIndex++;
+                score++;
+                document.getElementById('currentLetter').textContent = gameData.challenge[currentIndex];
+                document.getElementById('score').textContent = score;
+            } else {
+                clearInterval(progressInterval);
+                endGame('sign_race', score, 100);
+            }
+        }, 3000);
+    }
+
+    async function endGame(gameMode, score, accuracy) {
+        if (gameTimer) {
+            clearInterval(gameTimer);
+            gameTimer = null;
+        }
+        
+        const timeTaken = Math.floor((Date.now() - gameStartTime) / 1000);
+        
+        try {
+            const response = await fetch('/api/gamification/submit-score/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                },
+                body: JSON.stringify({
+                    game_mode: gameMode,
+                    score: score,
+                    accuracy: accuracy,
+                    time_taken: timeTaken
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                showGameResults(result);
+                loadDashboard(); // Refresh dashboard
+            }
+        } catch (error) {
+            console.error('Error submitting score:', error);
+        }
+    }
+
+    function showGameResults(result) {
+        const gameContent = document.getElementById('gameContent');
+        gameContent.innerHTML = `
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">🎉 Game Complete!</h2>
+            <div class="text-3xl font-bold text-green-600 mb-4">+${result.xp_earned} XP</div>
+            <div class="space-y-2 mb-6">
+                <div>Total XP: <span class="font-bold">${result.total_xp}</span></div>
+                <div>Level: <span class="font-bold">${result.level}</span></div>
+                <div>Current Streak: <span class="font-bold">${result.current_streak}</span></div>
+            </div>
+            <button class="gradient-bg text-white px-8 py-3 rounded-xl font-semibold w-full" onclick="closeModal()">Continue</button>
+        `;
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('gameModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
+{% endblock %}

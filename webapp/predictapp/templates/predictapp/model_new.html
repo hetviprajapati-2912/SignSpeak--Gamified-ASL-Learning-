@@ -1,0 +1,230 @@
+{% extends 'predictapp/base.html' %}
+
+{% block title %}SignSpeak - ASL Recognition Model{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+  <div class="max-w-6xl mx-auto">
+    <!-- Page Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+        ASL Recognition Model
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Experience real-time American Sign Language recognition using our advanced AI model. 
+        Use your webcam for live detection or upload images for instant analysis.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+      <!-- Webcam Section -->
+      <div class="glass-effect rounded-3xl p-8 shadow-xl">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-video text-purple-600 mr-2"></i>
+            Live Camera Detection
+          </h2>
+          <p class="text-gray-600">Real-time ASL recognition from your webcam</p>
+        </div>
+
+        <!-- Webcam Video -->
+        <div class="mb-6">
+          <video id="webcam" autoplay playsinline class="w-full h-64 object-cover border-4 border-purple-300 rounded-2xl shadow-lg bg-gray-100"></video>
+          <canvas id="canvas" width="64" height="64" class="hidden"></canvas>
+        </div>
+
+        <!-- Camera Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+          <button onclick="startCapture()" class="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg">
+            <i class="fas fa-play mr-2"></i> Start Camera
+          </button>
+          <button onclick="stopCapture()" class="flex-1 bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg">
+            <i class="fas fa-stop mr-2"></i> Stop Camera
+          </button>
+        </div>
+
+        <!-- Live Prediction Display -->
+        <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-2xl border-2 border-purple-200">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">
+            <i class="fas fa-brain text-purple-600 mr-2"></i>
+            Live Prediction
+          </h3>
+          <p id="prediction" class="text-2xl font-bold text-center text-purple-700 min-h-[2rem]">
+            Ready to detect signs...
+          </p>
+        </div>
+      </div>
+
+      <!-- Upload Section -->
+      <div class="glass-effect rounded-3xl p-8 shadow-xl">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-upload text-blue-600 mr-2"></i>
+            Image Upload Analysis
+          </h2>
+          <p class="text-gray-600">Upload an image for ASL sign recognition</p>
+        </div>
+
+        <!-- Upload Form -->
+        <form method="POST" action="{% url 'predict_image' %}" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %}
+          
+          <!-- File Upload Area -->
+          <div class="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center hover:border-purple-400 transition-colors">
+            <div class="mb-4">
+              <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+              <p class="text-lg font-medium text-gray-700 mb-2">Choose an ASL sign image</p>
+              <p class="text-sm text-gray-500">PNG, JPG, JPEG up to 10MB</p>
+            </div>
+            
+            <input type="file" name="gesture" accept="image/*" required
+                   class="block w-full text-sm text-gray-600
+                          file:mr-4 file:py-3 file:px-6
+                          file:rounded-full file:border-0
+                          file:text-sm file:font-semibold
+                          file:bg-purple-100 file:text-purple-700
+                          hover:file:bg-purple-200 transition-all
+                          file:shadow-lg file:cursor-pointer">
+          </div>
+
+          <!-- Upload Button -->
+          <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all transform hover:scale-105 shadow-lg">
+            <i class="fas fa-magic mr-2"></i> Analyze Image
+          </button>
+        </form>
+
+        <!-- Upload Results -->
+        {% if prediction or uploaded_image_url %}
+        <div class="mt-8 space-y-4">
+          {% if uploaded_image_url %}
+          <div class="text-center">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Uploaded Image</h3>
+            <img src="{{ uploaded_image_url }}" alt="Uploaded ASL Sign" 
+                 class="mx-auto rounded-2xl shadow-lg max-w-xs border-2 border-gray-200">
+          </div>
+          {% endif %}
+          
+          {% if prediction %}
+          <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-2xl border-2 border-green-200">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2 text-center">
+              <i class="fas fa-check-circle text-green-600 mr-2"></i>
+              Analysis Result
+            </h3>
+            <p class="text-3xl font-bold text-center text-green-700">{{ prediction }}</p>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="mt-16 grid md:grid-cols-3 gap-8">
+      <div class="text-center p-6 glass-effect rounded-2xl shadow-lg">
+        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-eye text-2xl text-purple-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Real-time Detection</h3>
+        <p class="text-gray-600">Instant ASL recognition with live camera feed and immediate feedback</p>
+      </div>
+      
+      <div class="text-center p-6 glass-effect rounded-2xl shadow-lg">
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-brain text-2xl text-blue-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">AI-Powered</h3>
+        <p class="text-gray-600">Advanced machine learning model trained on thousands of ASL signs</p>
+      </div>
+      
+      <div class="text-center p-6 glass-effect rounded-2xl shadow-lg">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-volume-up text-2xl text-green-600"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Audio Feedback</h3>
+        <p class="text-gray-600">Text-to-speech pronunciation for enhanced learning experience</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const video = document.getElementById('webcam');
+  const canvas = document.getElementById('canvas');
+  const predictionText = document.getElementById('prediction');
+
+  let stream = null;
+  let intervalId = null;
+
+  function startCapture() {
+    if (stream) return;
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(s => {
+        stream = s;
+        video.srcObject = stream;
+        video.play();
+        intervalId = setInterval(captureAndSend, 2000);
+        predictionText.innerText = "Camera active - detecting signs...";
+      })
+      .catch(err => {
+        alert("❌ Camera access denied or not available");
+        console.error("Camera error:", err);
+      });
+  }
+
+  function stopCapture() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      stream = null;
+      video.srcObject = null;
+      clearInterval(intervalId);
+      intervalId = null;
+      predictionText.innerText = "Ready to detect signs...";
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function captureAndSend() {
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, 64, 64);
+    const imageData = canvas.toDataURL('image/png');
+
+    fetch('/webcam/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCSRFToken(),
+      },
+      body: imageData,
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.prediction) {
+        predictionText.innerText = `${data.prediction}`;
+        speak(data.prediction);
+      } else {
+        predictionText.innerText = "No sign detected";
+      }
+    })
+    .catch(err => {
+      console.error("Prediction error:", err);
+      predictionText.innerText = "❌ Error detecting sign";
+    });
+  }
+
+  function getCSRFToken() {
+    const cookie = document.cookie.match(/csrftoken=([\w-]+)/);
+    return cookie ? cookie[1] : '';
+  }
+
+  function speak(text) {
+    const synth = window.speechSynthesis;
+    if (!synth.speaking) {
+      const utter = new SpeechSynthesisUtterance(text);
+      synth.speak(utter);
+    }
+  }
+</script>
+{% endblock %}

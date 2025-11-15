@@ -1,0 +1,450 @@
+{% extends 'predictapp/base_enhanced.html' %}
+
+{% block title %}ASL Animals & Birds - Learn ASL{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <!-- Header Section -->
+    <div class="glass-morphism rounded-2xl p-6 mb-8 shadow-xl animate__animated animate__slideInDown">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                <button id="backBtn" class="btn-fun gradient-secondary text-white px-4 py-2 rounded-xl font-bold shadow-lg">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back
+                </button>
+                <h1 class="text-3xl font-black text-gradient">ASL Animals & Birds 🐾</h1>
+            </div>
+            
+            <div class="flex items-center space-x-6">
+                <div class="text-center">
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Progress</div>
+                    <div class="text-lg font-bold text-blue-600" id="progressText">1/15 learned</div>
+                </div>
+                <div class="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                    <div id="progressBar" class="gradient-primary h-3 rounded-full transition-all duration-500" style="width: 7%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Learning Area -->
+    <div class="glass-morphism rounded-3xl p-4 sm:p-6 lg:p-8 mb-8 shadow-2xl neon-glow animate__animated animate__zoomIn">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+            <!-- ASL Sign -->
+            <div class="text-center order-1 lg:order-1">
+                <img id="signImage" src="/static/images/asl/Dog.jpg" alt="ASL Sign Dog" 
+                     class="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 mx-auto rounded-3xl shadow-2xl object-contain bg-white">
+            </div>
+            
+            <!-- Animal & Controls -->
+            <div class="text-center flex flex-col justify-center order-2 lg:order-2">
+                <h2 id="currentAnimal" class="text-4xl sm:text-5xl lg:text-6xl font-black text-gradient mb-4 lg:mb-6 floating">Dog</h2>
+                
+                <div class="space-y-3 sm:space-y-4">
+                    <button id="pronounceBtn" class="btn-fun gradient-success text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg w-full">
+                        <i class="fas fa-volume-up mr-2 sm:mr-3"></i>
+                        Pronounce
+                    </button>
+                    <button id="bookmarkBtn" class="btn-fun gradient-secondary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg w-full">
+                        <i class="fas fa-star mr-2 sm:mr-3"></i>
+                        Bookmark
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Fun Facts & Tips -->
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 rounded-2xl p-6 shadow-lg border border-purple-200 dark:border-purple-700">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-3">💡</div>
+                        <h3 class="text-xl font-bold text-purple-700 dark:text-purple-300">Fun Fact</h3>
+                    </div>
+                    <p id="funFact" class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        The ASL sign for 'Dog' involves patting your leg, just like calling a dog!
+                    </p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 rounded-2xl p-6 shadow-lg border border-green-200 dark:border-green-700">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-3">📝</div>
+                        <h3 class="text-xl font-bold text-green-700 dark:text-green-300">Learning Tip</h3>
+                    </div>
+                    <p id="learningTip" class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        Remember the natural gestures - many animal signs mimic how we interact with them.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Controls -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:space-x-4 lg:space-x-8 mt-6 lg:mt-8 pt-4 lg:pt-6 border-t border-gray-200 dark:border-gray-700">
+            <button id="prevBtn" class="btn-fun gradient-primary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold w-full sm:w-auto">
+                <i class="fas fa-chevron-left mr-2"></i>
+                <span class="hidden sm:inline">Previous</span>
+                <span class="sm:hidden">Prev</span>
+            </button>
+            
+            <button id="autoPlayBtn" class="btn-fun gradient-success text-white px-4 sm:px-6 py-3 rounded-xl font-bold w-full sm:w-auto">
+                <i class="fas fa-play-circle mr-2"></i>
+                Auto-Play
+            </button>
+            
+            <button id="nextBtn" class="btn-fun gradient-primary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold w-full sm:w-auto">
+                <span class="hidden sm:inline">Next</span>
+                <span class="sm:hidden">Next</span>
+                <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="glass-morphism rounded-2xl p-6 shadow-xl">
+        <div class="text-center mb-4">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Animals & Birds Progress</h3>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2" id="progressDots">
+            <!-- Progress dots will be generated by JavaScript -->
+        </div>
+        
+        <div class="text-center mt-6">
+            <button id="completeBtn" class="btn-fun gradient-success text-white px-12 py-4 rounded-2xl font-bold text-xl shadow-lg hidden">
+                <i class="fas fa-trophy mr-3"></i>
+                Complete Lesson 🎉
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Completion Modal -->
+<div id="completionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-gradient-to-br from-blue-50 to-purple-100 dark:from-gray-800 dark:to-purple-900 rounded-3xl p-10 max-w-lg w-full text-center shadow-2xl border border-blue-200 dark:border-purple-700 animate__animated animate__bounceIn">
+        <div class="text-8xl mb-6 animate-bounce">🎉</div>
+        <h2 class="text-3xl font-bold text-gradient mb-6">Congratulations!</h2>
+        <p class="text-xl text-gray-700 dark:text-gray-300 mb-8">You learned ASL Animals & Birds!</p>
+        <div class="bg-gradient-to-r from-green-400 to-green-600 rounded-2xl p-6 mb-8 shadow-lg">
+            <div class="text-4xl font-bold text-white mb-4">+400 XP</div>
+            <p class="text-white/90">Amazing progress in your ASL journey!</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button id="practiceAllBtn" class="btn-fun gradient-warning text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-redo mr-2"></i>
+                Practice All
+            </button>
+            <button id="backToDashboardBtn" class="btn-fun gradient-primary text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-home mr-2"></i>
+                Dashboard
+            </button>
+            <button id="backToLearningBtn" class="btn-fun gradient-secondary text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Daily Learning
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // ASL Animals & Birds data
+    const animalsData = [
+        { animal: 'Dog', image: '/static/images/asl/Dog.jpg', funFact: "The ASL sign for 'Dog' involves patting your leg, just like calling a dog!", tip: "Remember the natural gestures - many animal signs mimic how we interact with them." },
+        { animal: 'Cat', image: '/static/images/asl/Cat.jpg', funFact: "The 'Cat' sign mimics stroking whiskers on your face.", tip: "Use smooth, gentle movements like petting a cat." },
+        { animal: 'Bear', image: '/static/images/asl/Bear.jpg', funFact: "The 'Bear' sign shows scratching motions like a bear.", tip: "Cross your arms and make scratching motions." },
+        { animal: 'Bee', image: '/static/images/asl/Bee.jpg', funFact: "The 'Bee' sign shows a bee buzzing around.", tip: "Make small buzzing movements with your finger." },
+        { animal: 'Bunny', image: '/static/images/asl/Bunny.jpg', funFact: "The 'Bunny' sign shows the long ears of a rabbit.", tip: "Use two fingers to show the rabbit's ears moving." },
+        { animal: 'Butterfly', image: '/static/images/asl/Butterfly.jpg', funFact: "The 'Butterfly' sign shows wings fluttering gracefully.", tip: "Cross your thumbs and flutter your fingers like wings." },
+        { animal: 'Caterpillar', image: '/static/images/asl/Caterpiller.jpg', funFact: "The 'Caterpillar' sign shows crawling motion.", tip: "Use your finger to show the caterpillar crawling." },
+        { animal: 'Chicken', image: '/static/images/asl/Chicken.jpg', funFact: "The 'Chicken' sign shows a beak pecking.", tip: "Use your fingers to mimic a chicken's beak pecking." },
+        { animal: 'Cow', image: '/static/images/asl/Cow.jpg', funFact: "The 'Cow' sign shows the horns of a cow on your head.", tip: "Place your thumbs on your temples like cow horns." },
+        { animal: 'Duck', image: '/static/images/asl/Duck.jpg', funFact: "The 'Duck' sign shows a duck's bill opening and closing.", tip: "Use your fingers to mimic a duck's bill near your mouth." },
+        { animal: 'Goat', image: '/static/images/asl/Goat.jpg', funFact: "The 'Goat' sign shows goat horns and beard.", tip: "Show the goat's horns and stroke the beard area." },
+        { animal: 'Hippo', image: '/static/images/asl/Hippo.jpg', funFact: "The 'Hippo' sign shows the big mouth of a hippo.", tip: "Use both hands to show the hippo's large mouth opening." },
+        { animal: 'Lion', image: '/static/images/asl/Lion.jpg', funFact: "The 'Lion' sign shows the mane around a lion's head.", tip: "Use your hands to show the lion's flowing mane." },
+        { animal: 'Spider', image: '/static/images/asl/Spider.jpg', funFact: "The 'Spider' sign shows spider legs crawling.", tip: "Use your fingers to mimic spider legs moving." },
+        { animal: 'Tiger', image: '/static/images/asl/Tiger.jpg', funFact: "The 'Tiger' sign shows tiger stripes on the face.", tip: "Draw stripes across your cheeks like a tiger." }
+    ];
+
+    // Game state
+    let currentIndex = 0;
+    let learnedAnimals = [];
+    let isAutoPlaying = false;
+    let autoPlayInterval = null;
+
+    // Sound effects
+    function playSound(frequency, duration, type = 'sine') {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        } catch (e) {
+            console.log('Audio not supported');
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        updateDisplay();
+        createProgressDots();
+        loadProgress();
+    });
+
+    function setupEventListeners() {
+        document.getElementById('backBtn').addEventListener('click', () => {
+            playSound(600, 0.1);
+            window.location.href = '/daily-learning/';
+        });
+        
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            playSound(500, 0.1);
+            previousAnimal();
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            playSound(700, 0.1);
+            nextAnimal();
+        });
+        
+        document.getElementById('pronounceBtn').addEventListener('click', () => {
+            pronounceAnimal();
+        });
+        
+        document.getElementById('bookmarkBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            bookmarkAnimal();
+        });
+        
+        document.getElementById('autoPlayBtn').addEventListener('click', () => {
+            toggleAutoPlay();
+        });
+        
+        document.getElementById('completeBtn').addEventListener('click', () => {
+            playSound([523, 659, 784, 1047], 0.6);
+            showCompletionModal();
+        });
+
+        // Modal buttons
+        document.getElementById('practiceAllBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            currentIndex = 0;
+            updateDisplay();
+            closeModal();
+        });
+        
+        document.getElementById('backToDashboardBtn').addEventListener('click', () => {
+            playSound(500, 0.2);
+            window.location.href = '/dashboard/';
+        });
+        
+        document.getElementById('backToLearningBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            window.location.href = '/daily-learning/';
+        });
+    }
+
+    function updateDisplay() {
+        const current = animalsData[currentIndex];
+        
+        // Update main display
+        document.getElementById('signImage').src = current.image;
+        document.getElementById('signImage').alt = `ASL Sign ${current.animal}`;
+        document.getElementById('currentAnimal').textContent = current.animal;
+        
+        // Update fun fact and tip
+        document.getElementById('funFact').textContent = current.funFact;
+        document.getElementById('learningTip').textContent = current.tip;
+        
+        // Update navigation buttons
+        document.getElementById('prevBtn').disabled = currentIndex === 0;
+        document.getElementById('nextBtn').disabled = currentIndex === animalsData.length - 1;
+        
+        // Update progress
+        updateProgress();
+        updateProgressDots();
+        
+        // Mark as learned
+        if (!learnedAnimals.includes(currentIndex)) {
+            learnedAnimals.push(currentIndex);
+            saveProgress();
+        }
+        
+        // Check if all learned
+        if (learnedAnimals.length === animalsData.length) {
+            document.getElementById('completeBtn').classList.remove('hidden');
+        }
+        
+        // Add animation
+        document.querySelector('.glass-morphism').classList.add('animate__animated', 'animate__pulse');
+        setTimeout(() => {
+            document.querySelector('.glass-morphism').classList.remove('animate__animated', 'animate__pulse');
+        }, 1000);
+        
+        // Auto-pronounce the animal name
+        setTimeout(() => {
+            pronounceAnimal();
+        }, 500);
+    }
+
+    function updateProgress() {
+        const learned = learnedAnimals.length;
+        const total = animalsData.length;
+        const percentage = (learned / total) * 100;
+        
+        document.getElementById('progressText').textContent = `${learned}/${total} learned`;
+        document.getElementById('progressBar').style.width = `${percentage}%`;
+    }
+
+    function createProgressDots() {
+        const container = document.getElementById('progressDots');
+        container.innerHTML = '';
+        
+        animalsData.forEach((item, index) => {
+            const dot = document.createElement('button');
+            dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer';
+            dot.textContent = item.animal.charAt(0);
+            dot.addEventListener('click', () => {
+                playSound(600, 0.1);
+                currentIndex = index;
+                updateDisplay();
+            });
+            container.appendChild(dot);
+        });
+    }
+
+    function updateProgressDots() {
+        const dots = document.querySelectorAll('#progressDots button');
+        dots.forEach((dot, index) => {
+            if (index === currentIndex) {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-blue-500 text-white scale-125';
+            } else if (learnedAnimals.includes(index)) {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-green-500 text-white';
+            } else {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-gray-300 text-gray-700';
+            }
+        });
+    }
+
+    function previousAnimal() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateDisplay();
+        }
+    }
+
+    function nextAnimal() {
+        if (currentIndex < animalsData.length - 1) {
+            currentIndex++;
+            updateDisplay();
+        }
+    }
+
+    function pronounceAnimal() {
+        const currentAnimal = animalsData[currentIndex].animal;
+        
+        // Create speech synthesis
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(currentAnimal);
+            utterance.rate = 0.7;
+            utterance.pitch = 1;
+            speechSynthesis.speak(utterance);
+        }
+        
+        // Sound effect
+        playSound([400, 500, 600], 0.5, 'sine');
+        
+        // Visual feedback
+        const button = document.getElementById('pronounceBtn');
+        button.classList.add('animate__animated', 'animate__pulse');
+        setTimeout(() => {
+            button.classList.remove('animate__animated', 'animate__pulse');
+        }, 1000);
+    }
+
+    function toggleAutoPlay() {
+        if (isAutoPlaying) {
+            clearInterval(autoPlayInterval);
+            isAutoPlaying = false;
+            document.getElementById('autoPlayBtn').innerHTML = '<i class="fas fa-play-circle mr-2"></i>Auto-Play';
+            playSound(400, 0.2);
+        } else {
+            isAutoPlaying = true;
+            document.getElementById('autoPlayBtn').innerHTML = '<i class="fas fa-pause-circle mr-2"></i>Stop';
+            playSound(600, 0.2);
+            
+            autoPlayInterval = setInterval(() => {
+                if (currentIndex < animalsData.length - 1) {
+                    nextAnimal();
+                } else {
+                    toggleAutoPlay();
+                }
+            }, 3000);
+        }
+    }
+
+    function bookmarkAnimal() {
+        const current = animalsData[currentIndex];
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarkedSigns') || '[]');
+        
+        if (!bookmarks.find(b => b.word === current.animal)) {
+            bookmarks.push({ word: current.animal, image: current.image, category: 'animals' });
+            localStorage.setItem('bookmarkedSigns', JSON.stringify(bookmarks));
+            showNotification(`⭐ ${current.animal} bookmarked!`);
+        } else {
+            showNotification(`📌 ${current.animal} already bookmarked!`);
+        }
+    }
+
+    function showCompletionModal() {
+        document.getElementById('completionModal').classList.remove('hidden');
+        document.getElementById('completionModal').classList.add('flex');
+        
+        // Save completion
+        const stats = JSON.parse(localStorage.getItem('learningStats') || '{}');
+        stats.animalsCompleted = true;
+        stats.totalSignsLearned = (stats.totalSignsLearned || 0) + 15;
+        localStorage.setItem('learningStats', JSON.stringify(stats));
+    }
+
+    function closeModal() {
+        document.getElementById('completionModal').classList.add('hidden');
+        document.getElementById('completionModal').classList.remove('flex');
+    }
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-8 right-8 glass-morphism rounded-2xl p-4 text-center shadow-xl z-50 animate__animated animate__slideInRight';
+        notification.innerHTML = `<div class="text-lg font-bold text-gray-800 dark:text-white">${message}</div>`;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('animate__slideOutRight');
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
+    }
+
+    function saveProgress() {
+        localStorage.setItem('animalsProgress', JSON.stringify(learnedAnimals));
+    }
+
+    function loadProgress() {
+        const saved = localStorage.getItem('animalsProgress');
+        if (saved) {
+            learnedAnimals = JSON.parse(saved);
+            updateProgress();
+            updateProgressDots();
+        }
+    }
+</script>
+{% endblock %}

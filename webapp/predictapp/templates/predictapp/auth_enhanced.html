@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignSpeak - Join the ASL Revolution! 🚀</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .gradient-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .dark .glass-morphism {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.6);
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .wiggle {
+            animation: wiggle 2s ease-in-out infinite;
+        }
+        
+        @keyframes wiggle {
+            0%, 7% { transform: rotateZ(0); }
+            15% { transform: rotateZ(-15deg); }
+            20% { transform: rotateZ(10deg); }
+            25% { transform: rotateZ(-10deg); }
+            30% { transform: rotateZ(6deg); }
+            35% { transform: rotateZ(-4deg); }
+            40%, 100% { transform: rotateZ(0); }
+        }
+        
+        .btn-fun {
+            position: relative;
+            overflow: hidden;
+            transform: perspective(1px) translateZ(0);
+        }
+        
+        .btn-fun:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .btn-fun:hover:before {
+            transform: translateX(100%);
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.7;
+            animation: particle-float 4s linear infinite;
+        }
+        
+        @keyframes particle-float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dark .text-gradient {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 60px;
+            height: 30px;
+            background: #ccc;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dark-mode-toggle.active {
+            background: #667eea;
+        }
+        
+        .dark-mode-toggle .toggle-circle {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .dark-mode-toggle.active .toggle-circle {
+            transform: translateX(30px);
+            background: #1f2937;
+            color: white;
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-400 via-pink-400 to-red-400 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 min-h-screen flex items-center justify-center p-4 transition-all duration-500 overflow-auto">
+    
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()" id="darkModeToggle">
+        <div class="toggle-circle">
+            <i class="fas fa-sun" id="modeIcon"></i>
+        </div>
+    </div>
+    
+    <!-- Form Toggle Button -->
+    <div class="fixed top-20 right-6 z-50">
+        <button id="formToggleBtn" onclick="toggleForm()" class="glass-morphism text-gray-700 dark:text-gray-300 px-4 py-2 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 shadow-xl">
+            <i class="fas fa-exchange-alt mr-2"></i>
+            <span id="toggleText">Login</span>
+        </button>
+    </div>
+    
+    <!-- Floating Particles Background -->
+    <div id="particles-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+    
+    <!-- Floating Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-10 left-10 text-6xl animate-bounce opacity-20">🤟</div>
+        <div class="absolute top-20 right-20 text-4xl floating opacity-30">✨</div>
+        <div class="absolute bottom-20 left-20 text-5xl wiggle opacity-25">🎯</div>
+        <div class="absolute bottom-10 right-10 text-3xl animate-pulse opacity-20">🚀</div>
+        <div class="absolute top-1/2 left-5 text-4xl floating opacity-15">💫</div>
+        <div class="absolute top-1/3 right-5 text-5xl animate-bounce opacity-20">🎉</div>
+    </div>
+    
+    <!-- Main Auth Container -->
+    <div class="relative z-10 w-full max-w-lg my-4">
+        <div class="glass-morphism rounded-3xl p-8 shadow-2xl neon-glow animate__animated animate__zoomIn">
+            
+            <!-- Logo Section -->
+            <div class="text-center mb-6">
+                <div class="relative inline-block">
+                    <div class="w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center text-white text-3xl shadow-2xl neon-glow floating mx-auto mb-3">
+                        🤟
+                    </div>
+                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-ping"></div>
+                    <div class="absolute -bottom-1 -left-1 w-3 h-3 bg-yellow-400 rounded-full animate-bounce"></div>
+                </div>
+                <h1 class="text-3xl font-black text-gradient mb-2 animate__animated animate__fadeInDown">
+                    SignSpeak
+                </h1>
+                <p class="text-gray-600 dark:text-gray-300 font-medium animate__animated animate__fadeInUp text-sm">
+                    🚀 Join the ASL Revolution! ✨
+                </p>
+            </div>
+            
+            <!-- Alert Messages -->
+            <div class="error-message bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded-xl mb-4 hidden animate__animated animate__shakeX">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <span id="errorText"></span>
+                </div>
+            </div>
+            
+            <div class="success-message bg-green-100 dark:bg-green-900/30 border border-green-300 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded-xl mb-4 hidden animate__animated animate__bounceIn">
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span id="successText"></span>
+                </div>
+            </div>
+            
+            <div class="loading bg-blue-100 dark:bg-blue-900/30 border border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-300 px-4 py-3 rounded-xl mb-4 hidden animate__animated animate__pulse">
+                <div class="flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
+                    <span>Processing your request...</span>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div class="form-container active animate__animated animate__fadeIn" id="signupForm">
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-1">Create Your Account! 🎉</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Start your ASL learning journey today</p>
+                </div>
+                
+                <form id="signupFormElement" class="space-y-4">
+                    <div class="form-group">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-user mr-2 text-purple-500"></i>
+                            Username
+                        </label>
+                        <input type="text" id="signupUsername" name="username" required
+                               class="w-full px-4 py-3 bg-white/50 dark:bg-gray-800/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none transition-all duration-300 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                               placeholder="Choose a cool username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-envelope mr-2 text-blue-500"></i>
+                            Email Address
+                        </label>
+                        <input type="email" id="signupEmail" name="email" required
+                               class="w-full px-4 py-3 bg-white/50 dark:bg-gray-800/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none transition-all duration-300 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                               placeholder="your.email@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-lock mr-2 text-green-500"></i>
+                            Password
+                        </label>
+                        <input type="password" id="signupPassword" name="password" required
+                               class="w-full px-4 py-3 bg-white/50 dark:bg-gray-800/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none transition-all duration-300 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                               placeholder="Create a strong password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-shield-alt mr-2 text-red-500"></i>
+                            Confirm Password
+                        </label>
+                        <input type="password" id="signupPasswordConfirm" name="password_confirm" required
+                               class="w-full px-4 py-3 bg-white/50 dark:bg-gray-800/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none transition-all duration-300 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                               placeholder="Confirm your password">
+                    </div>
+                    
+                    <button type="submit" class="btn-fun w-full gradient-primary text-white py-3 rounded-xl font-bold text-base transition-all duration-300 transform hover:scale-105 shadow-xl neon-glow">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Start My Journey! 🚀
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                        <p class="text-gray-600 dark:text-gray-400 mb-3 text-sm">
+                            Already have an account?
+                        </p>
+                        <button onclick="showLogin()" class="btn-fun gradient-secondary text-white px-6 py-2 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 shadow-xl">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Sign In Instead! ✨
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div class="form-container hidden animate__animated animate__fadeIn" id="loginForm">
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-1">Welcome Back! 👋</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Continue your ASL learning adventure</p>
+                </div>
+                
+                <form id="loginFormElement" class="space-y-4">
+                    <div class="form-group">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-user mr-2 text-purple-500"></i>
+                            Username
+                        </label>
+                        <input type="text" id="loginUsername" name="username" required
+                               class="w-full px-4 py-3 bg-white/50 dark:bg-gray-800/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none transition-all duration-300 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                               placeholder="Enter your username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-lock mr-2 text-green-500"></i>
+                            Password
+                        </label>
+                        <input type="password" id="loginPassword" name="password" required
+                               class="w-full px-4 py-3 bg-white/50 dark:bg-gray-800/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:border-purple-500 dark:focus:border-purple-400 focus:outline-none transition-all duration-300 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                               placeholder="Enter your password">
+                    </div>
+                    
+                    <button type="submit" class="btn-fun w-full gradient-secondary text-white py-3 rounded-xl font-bold text-base transition-all duration-300 transform hover:scale-105 shadow-xl neon-glow">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Let's Learn! 🎯
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                        <p class="text-gray-600 dark:text-gray-400 mb-3 text-sm">
+                            New to SignSpeak?
+                        </p>
+                        <button onclick="showSignup()" class="btn-fun gradient-primary text-white px-6 py-2 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 shadow-xl">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Join Us Now! 🚀
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+
+        </div>
+    </div>
+
+    <script>
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const toggle = document.getElementById('darkModeToggle');
+            const icon = document.getElementById('modeIcon');
+            
+            html.classList.toggle('dark');
+            toggle.classList.toggle('active');
+            
+            if (html.classList.contains('dark')) {
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('darkMode', 'false');
+            }
+        }
+
+        // Initialize Dark Mode
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkMode = localStorage.getItem('darkMode');
+            const toggle = document.getElementById('darkModeToggle');
+            const icon = document.getElementById('modeIcon');
+            
+            if (darkMode === 'true') {
+                document.documentElement.classList.add('dark');
+                toggle.classList.add('active');
+                icon.className = 'fas fa-moon';
+            }
+            
+            createParticles();
+            showSignup(); // Show signup by default
+        });
+
+        function showLogin() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.remove('active');
+            document.getElementById('toggleText').textContent = 'Sign Up';
+            clearMessages();
+        }
+
+        function showSignup() {
+            document.getElementById('signupForm').classList.remove('hidden');
+            document.getElementById('signupForm').classList.add('active');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('toggleText').textContent = 'Login';
+            clearMessages();
+        }
+        
+        function toggleForm() {
+            const signupForm = document.getElementById('signupForm');
+            const loginForm = document.getElementById('loginForm');
+            
+            if (signupForm.classList.contains('active')) {
+                showLogin();
+            } else {
+                showSignup();
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.querySelector('.error-message');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorDiv.classList.remove('hidden');
+            document.querySelector('.success-message').classList.add('hidden');
+            document.querySelector('.loading').classList.add('hidden');
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.querySelector('.success-message');
+            const successText = document.getElementById('successText');
+            successText.textContent = message;
+            successDiv.classList.remove('hidden');
+            document.querySelector('.error-message').classList.add('hidden');
+            document.querySelector('.loading').classList.add('hidden');
+        }
+
+        function showLoading() {
+            document.querySelector('.loading').classList.remove('hidden');
+            document.querySelector('.error-message').classList.add('hidden');
+            document.querySelector('.success-message').classList.add('hidden');
+        }
+
+        function clearMessages() {
+            document.querySelector('.error-message').classList.add('hidden');
+            document.querySelector('.success-message').classList.add('hidden');
+            document.querySelector('.loading').classList.add('hidden');
+        }
+
+        // Login form handler
+        document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading();
+
+            const formData = new FormData(e.target);
+            const data = {
+                username: formData.get('username'),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await fetch('/api/auth/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('access_token', result.access);
+                    localStorage.setItem('refresh_token', result.refresh);
+                    localStorage.setItem('user_data', JSON.stringify(result.user));
+                    
+                    // Update streak on login
+                    updateLoginStreak();
+                    
+                    showSuccess('🎉 Welcome back! Redirecting to your dashboard...');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard/';
+                    }, 2000);
+                } else {
+                    showError(result.error || 'Login failed. Please try again.');
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection.');
+            }
+        });
+
+        // Signup form handler
+        document.getElementById('signupFormElement').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showLoading();
+
+            const formData = new FormData(e.target);
+            const data = {
+                username: formData.get('username'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                password_confirm: formData.get('password_confirm')
+            };
+
+            try {
+                const response = await fetch('/api/auth/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('🎉 Account created successfully! Please login to continue your journey.');
+                    setTimeout(() => {
+                        showLogin();
+                    }, 2000);
+                } else {
+                    const errors = Object.values(result).flat().join(', ');
+                    showError(errors || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                showError('Network error. Please check your connection.');
+            }
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
+            
+            setInterval(() => {
+                if (Math.random() > 0.8) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.width = Math.random() * 8 + 4 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    
+                    container.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 5000);
+                }
+            }, 200);
+        }
+
+        // Streak tracking functions
+        function updateLoginStreak() {
+            const today = new Date().toDateString();
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toDateString();
+            
+            let streakData = JSON.parse(localStorage.getItem('userStreak') || '{}');
+            
+            if (!streakData.lastLoginDate) {
+                // First login
+                streakData = {
+                    currentStreak: 1,
+                    longestStreak: 1,
+                    lastLoginDate: today,
+                    totalDays: 1
+                };
+            } else if (streakData.lastLoginDate === today) {
+                // Already logged in today
+                return streakData;
+            } else if (streakData.lastLoginDate === yesterdayStr) {
+                // Consecutive day
+                streakData.currentStreak += 1;
+                streakData.longestStreak = Math.max(streakData.longestStreak, streakData.currentStreak);
+                streakData.lastLoginDate = today;
+                streakData.totalDays += 1;
+            } else {
+                // Streak broken
+                streakData.currentStreak = 1;
+                streakData.lastLoginDate = today;
+                streakData.totalDays += 1;
+            }
+            
+            localStorage.setItem('userStreak', JSON.stringify(streakData));
+            return streakData;
+        }
+
+        // Check if user is already logged in - removed auto redirect
+    </script>
+</body>
+</html>

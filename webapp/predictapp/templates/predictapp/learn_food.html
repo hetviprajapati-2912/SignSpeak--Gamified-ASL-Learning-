@@ -1,0 +1,445 @@
+{% extends 'predictapp/base_enhanced.html' %}
+
+{% block title %}ASL Food & Drinks - Learn ASL{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <!-- Header Section -->
+    <div class="glass-morphism rounded-2xl p-6 mb-8 shadow-xl animate__animated animate__slideInDown">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                <button id="backBtn" class="btn-fun gradient-secondary text-white px-4 py-2 rounded-xl font-bold shadow-lg">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back
+                </button>
+                <h1 class="text-3xl font-black text-gradient">ASL Food & Drinks 🍎</h1>
+            </div>
+            
+            <div class="flex items-center space-x-6">
+                <div class="text-center">
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Progress</div>
+                    <div class="text-lg font-bold text-blue-600" id="progressText">1/12 learned</div>
+                </div>
+                <div class="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                    <div id="progressBar" class="gradient-primary h-3 rounded-full transition-all duration-500" style="width: 8%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Learning Area -->
+    <div class="glass-morphism rounded-3xl p-8 mb-8 shadow-2xl neon-glow animate__animated animate__zoomIn">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <!-- ASL Sign -->
+            <div class="text-center">
+                <img id="signImage" src="/static/images/asl/Apple.jpg" alt="ASL Sign Apple" 
+                     class="w-80 h-80 mx-auto rounded-3xl shadow-2xl object-contain bg-white">
+            </div>
+            
+            <!-- Food & Controls -->
+            <div class="text-center flex flex-col justify-center">
+                <h2 id="currentFood" class="text-6xl font-black text-gradient mb-6 floating">Apple</h2>
+                
+                <div class="space-y-4">
+                    <button id="pronounceBtn" class="btn-fun gradient-success text-white px-8 py-4 rounded-xl font-bold text-lg w-full">
+                        <i class="fas fa-volume-up mr-3"></i>
+                        Pronounce
+                    </button>
+                    <button id="bookmarkBtn" class="btn-fun gradient-secondary text-white px-8 py-4 rounded-xl font-bold text-lg w-full">
+                        <i class="fas fa-star mr-3"></i>
+                        Bookmark
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Fun Facts & Tips -->
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 rounded-2xl p-6 shadow-lg border border-purple-200 dark:border-purple-700">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-3">💡</div>
+                        <h3 class="text-xl font-bold text-purple-700 dark:text-purple-300">Fun Fact</h3>
+                    </div>
+                    <p id="funFact" class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        The ASL sign for 'Apple' involves twisting your finger at the corner of your mouth!
+                    </p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 rounded-2xl p-6 shadow-lg border border-green-200 dark:border-green-700">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-3">📝</div>
+                        <h3 class="text-xl font-bold text-green-700 dark:text-green-300">Learning Tip</h3>
+                    </div>
+                    <p id="learningTip" class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        Many food signs relate to how we eat or prepare the food.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Controls -->
+        <div class="flex justify-center items-center space-x-8 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <button id="prevBtn" class="btn-fun gradient-primary text-white px-8 py-4 rounded-xl font-bold">
+                <i class="fas fa-chevron-left mr-2"></i>
+                Previous
+            </button>
+            
+            <button id="autoPlayBtn" class="btn-fun gradient-success text-white px-6 py-3 rounded-xl font-bold">
+                <i class="fas fa-play-circle mr-2"></i>
+                Auto-Play
+            </button>
+            
+            <button id="nextBtn" class="btn-fun gradient-primary text-white px-8 py-4 rounded-xl font-bold">
+                Next
+                <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="glass-morphism rounded-2xl p-6 shadow-xl">
+        <div class="text-center mb-4">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Food & Drinks Progress</h3>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2" id="progressDots">
+            <!-- Progress dots will be generated by JavaScript -->
+        </div>
+        
+        <div class="text-center mt-6">
+            <button id="completeBtn" class="btn-fun gradient-success text-white px-12 py-4 rounded-2xl font-bold text-xl shadow-lg hidden">
+                <i class="fas fa-trophy mr-3"></i>
+                Complete Lesson 🎉
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Completion Modal -->
+<div id="completionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-gradient-to-br from-blue-50 to-purple-100 dark:from-gray-800 dark:to-purple-900 rounded-3xl p-10 max-w-lg w-full text-center shadow-2xl border border-blue-200 dark:border-purple-700 animate__animated animate__bounceIn">
+        <div class="text-8xl mb-6 animate-bounce">🎉</div>
+        <h2 class="text-3xl font-bold text-gradient mb-6">Congratulations!</h2>
+        <p class="text-xl text-gray-700 dark:text-gray-300 mb-8">You learned ASL Food & Drinks!</p>
+        <div class="bg-gradient-to-r from-green-400 to-green-600 rounded-2xl p-6 mb-8 shadow-lg">
+            <div class="text-4xl font-bold text-white mb-4">+350 XP</div>
+            <p class="text-white/90">Delicious progress in your ASL journey!</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button id="practiceAllBtn" class="btn-fun gradient-warning text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-redo mr-2"></i>
+                Practice All
+            </button>
+            <button id="backToDashboardBtn" class="btn-fun gradient-primary text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-home mr-2"></i>
+                Dashboard
+            </button>
+            <button id="backToLearningBtn" class="btn-fun gradient-secondary text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Daily Learning
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // ASL Food & Drinks data
+    const foodData = [
+        { food: 'Apple', image: '/static/images/asl/Apple.jpg', funFact: "The ASL sign for 'Apple' involves twisting your finger at the corner of your mouth!", tip: "Many food signs relate to how we eat or prepare the food." },
+        { food: 'Banana', image: '/static/images/asl/Banana.jpg', funFact: "The 'Banana' sign mimics peeling a banana.", tip: "Use both hands to show the peeling motion." },
+        { food: 'Bread', image: '/static/images/asl/Bread.jpg', funFact: "The 'Bread' sign shows slicing bread with your hands.", tip: "Make slicing motions like cutting a loaf of bread." },
+        { food: 'Burger', image: '/static/images/asl/Burger.jpg', funFact: "The 'Burger' sign shows holding a big burger with both hands.", tip: "Cup your hands like holding a large hamburger." },
+        { food: 'Cheese', image: '/static/images/asl/Cheese.jpg', funFact: "The 'Cheese' sign shows pressing cheese together.", tip: "Press your palms together like making cheese." },
+        { food: 'Chocolate', image: '/static/images/asl/Chocolate.jpg', funFact: "The 'Chocolate' sign shows stirring chocolate.", tip: "Make circular stirring motions with your hand." },
+        { food: 'Cookie', image: '/static/images/asl/Cookie.jpg', funFact: "The 'Cookie' sign shows cutting cookie shapes.", tip: "Use your hand like a cookie cutter." },
+        { food: 'Ice Cream', image: '/static/images/asl/IceCream.jpg', funFact: "The 'Ice Cream' sign shows licking an ice cream cone.", tip: "Move your hand like licking ice cream." },
+        { food: 'Milk', image: '/static/images/asl/Milk.jpg', funFact: "The 'Milk' sign shows milking a cow.", tip: "Make squeezing motions like milking." },
+        { food: 'Popcorn', image: '/static/images/asl/Popcorn.jpg', funFact: "The 'Popcorn' sign shows popcorn popping.", tip: "Use alternating fingers to show popping motion." },
+        { food: 'Sandwich', image: '/static/images/asl/Sandwitch.jpg', funFact: "The 'Sandwich' sign shows holding a sandwich to eat.", tip: "Cup both hands like holding a sandwich." },
+        { food: 'Water', image: '/static/images/asl/Water.jpg', funFact: "The 'Water' sign shows the letter W tapping your chin.", tip: "Use the W handshape near your mouth." }
+    ];
+
+    // Game state
+    let currentIndex = 0;
+    let learnedFood = [];
+    let isAutoPlaying = false;
+    let autoPlayInterval = null;
+
+    // Sound effects
+    function playSound(frequency, duration, type = 'sine') {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        } catch (e) {
+            console.log('Audio not supported');
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        updateDisplay();
+        createProgressDots();
+        loadProgress();
+    });
+
+    function setupEventListeners() {
+        document.getElementById('backBtn').addEventListener('click', () => {
+            playSound(600, 0.1);
+            window.location.href = '/daily-learning/';
+        });
+        
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            playSound(500, 0.1);
+            previousFood();
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            playSound(700, 0.1);
+            nextFood();
+        });
+        
+        document.getElementById('pronounceBtn').addEventListener('click', () => {
+            pronounceFood();
+        });
+        
+        document.getElementById('bookmarkBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            bookmarkFood();
+        });
+        
+        document.getElementById('autoPlayBtn').addEventListener('click', () => {
+            toggleAutoPlay();
+        });
+        
+        document.getElementById('completeBtn').addEventListener('click', () => {
+            playSound([523, 659, 784, 1047], 0.6);
+            showCompletionModal();
+        });
+
+        // Modal buttons
+        document.getElementById('practiceAllBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            currentIndex = 0;
+            updateDisplay();
+            closeModal();
+        });
+        
+        document.getElementById('backToDashboardBtn').addEventListener('click', () => {
+            playSound(500, 0.2);
+            window.location.href = '/dashboard/';
+        });
+        
+        document.getElementById('backToLearningBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            window.location.href = '/daily-learning/';
+        });
+    }
+
+    function updateDisplay() {
+        const current = foodData[currentIndex];
+        
+        // Update main display
+        document.getElementById('signImage').src = current.image;
+        document.getElementById('signImage').alt = `ASL Sign ${current.food}`;
+        document.getElementById('currentFood').textContent = current.food;
+        
+        // Update fun fact and tip
+        document.getElementById('funFact').textContent = current.funFact;
+        document.getElementById('learningTip').textContent = current.tip;
+        
+        // Update navigation buttons
+        document.getElementById('prevBtn').disabled = currentIndex === 0;
+        document.getElementById('nextBtn').disabled = currentIndex === foodData.length - 1;
+        
+        // Update progress
+        updateProgress();
+        updateProgressDots();
+        
+        // Mark as learned
+        if (!learnedFood.includes(currentIndex)) {
+            learnedFood.push(currentIndex);
+            saveProgress();
+        }
+        
+        // Check if all learned
+        if (learnedFood.length === foodData.length) {
+            document.getElementById('completeBtn').classList.remove('hidden');
+        }
+        
+        // Add animation
+        document.querySelector('.glass-morphism').classList.add('animate__animated', 'animate__pulse');
+        setTimeout(() => {
+            document.querySelector('.glass-morphism').classList.remove('animate__animated', 'animate__pulse');
+        }, 1000);
+        
+        // Auto-pronounce the food name
+        setTimeout(() => {
+            pronounceFood();
+        }, 500);
+    }
+
+    function updateProgress() {
+        const learned = learnedFood.length;
+        const total = foodData.length;
+        const percentage = (learned / total) * 100;
+        
+        document.getElementById('progressText').textContent = `${learned}/${total} learned`;
+        document.getElementById('progressBar').style.width = `${percentage}%`;
+    }
+
+    function createProgressDots() {
+        const container = document.getElementById('progressDots');
+        container.innerHTML = '';
+        
+        foodData.forEach((item, index) => {
+            const dot = document.createElement('button');
+            dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer';
+            dot.textContent = item.food.charAt(0);
+            dot.addEventListener('click', () => {
+                playSound(600, 0.1);
+                currentIndex = index;
+                updateDisplay();
+            });
+            container.appendChild(dot);
+        });
+    }
+
+    function updateProgressDots() {
+        const dots = document.querySelectorAll('#progressDots button');
+        dots.forEach((dot, index) => {
+            if (index === currentIndex) {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-blue-500 text-white scale-125';
+            } else if (learnedFood.includes(index)) {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-green-500 text-white';
+            } else {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-gray-300 text-gray-700';
+            }
+        });
+    }
+
+    function previousFood() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateDisplay();
+        }
+    }
+
+    function nextFood() {
+        if (currentIndex < foodData.length - 1) {
+            currentIndex++;
+            updateDisplay();
+        }
+    }
+
+    function pronounceFood() {
+        const currentFood = foodData[currentIndex].food;
+        
+        // Create speech synthesis
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(currentFood);
+            utterance.rate = 0.7;
+            utterance.pitch = 1;
+            speechSynthesis.speak(utterance);
+        }
+        
+        // Sound effect
+        playSound([400, 500, 600], 0.5, 'sine');
+        
+        // Visual feedback
+        const button = document.getElementById('pronounceBtn');
+        button.classList.add('animate__animated', 'animate__pulse');
+        setTimeout(() => {
+            button.classList.remove('animate__animated', 'animate__pulse');
+        }, 1000);
+    }
+
+    function toggleAutoPlay() {
+        if (isAutoPlaying) {
+            clearInterval(autoPlayInterval);
+            isAutoPlaying = false;
+            document.getElementById('autoPlayBtn').innerHTML = '<i class="fas fa-play-circle mr-2"></i>Auto-Play';
+            playSound(400, 0.2);
+        } else {
+            isAutoPlaying = true;
+            document.getElementById('autoPlayBtn').innerHTML = '<i class="fas fa-pause-circle mr-2"></i>Stop';
+            playSound(600, 0.2);
+            
+            autoPlayInterval = setInterval(() => {
+                if (currentIndex < foodData.length - 1) {
+                    nextFood();
+                } else {
+                    toggleAutoPlay();
+                }
+            }, 3000);
+        }
+    }
+
+    function bookmarkFood() {
+        const current = foodData[currentIndex];
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarkedSigns') || '[]');
+        
+        if (!bookmarks.find(b => b.word === current.food)) {
+            bookmarks.push({ word: current.food, image: current.image, category: 'food' });
+            localStorage.setItem('bookmarkedSigns', JSON.stringify(bookmarks));
+            showNotification(`⭐ ${current.food} bookmarked!`);
+        } else {
+            showNotification(`📌 ${current.food} already bookmarked!`);
+        }
+    }
+
+    function showCompletionModal() {
+        document.getElementById('completionModal').classList.remove('hidden');
+        document.getElementById('completionModal').classList.add('flex');
+        
+        // Save completion
+        const stats = JSON.parse(localStorage.getItem('learningStats') || '{}');
+        stats.foodCompleted = true;
+        stats.totalSignsLearned = (stats.totalSignsLearned || 0) + 12;
+        localStorage.setItem('learningStats', JSON.stringify(stats));
+    }
+
+    function closeModal() {
+        document.getElementById('completionModal').classList.add('hidden');
+        document.getElementById('completionModal').classList.remove('flex');
+    }
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-8 right-8 glass-morphism rounded-2xl p-4 text-center shadow-xl z-50 animate__animated animate__slideInRight';
+        notification.innerHTML = `<div class="text-lg font-bold text-gray-800 dark:text-white">${message}</div>`;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('animate__slideOutRight');
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
+    }
+
+    function saveProgress() {
+        localStorage.setItem('foodProgress', JSON.stringify(learnedFood));
+    }
+
+    function loadProgress() {
+        const saved = localStorage.getItem('foodProgress');
+        if (saved) {
+            learnedFood = JSON.parse(saved);
+            updateProgress();
+            updateProgressDots();
+        }
+    }
+</script>
+{% endblock %}

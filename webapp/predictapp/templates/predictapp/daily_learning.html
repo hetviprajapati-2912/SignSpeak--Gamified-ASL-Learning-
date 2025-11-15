@@ -1,0 +1,367 @@
+{% extends 'predictapp/base_enhanced.html' %}
+
+{% block title %}Daily Learning - Learn ASL{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <!-- Header Section -->
+    <div class="glass-morphism rounded-3xl p-4 sm:p-6 lg:p-8 mb-6 lg:mb-8 shadow-2xl neon-glow animate__animated animate__fadeInDown">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-gradient mb-2 floating" style="line-height: 1.3; padding-bottom: 4px;">
+                    Daily Learning &#128218;
+                </h1>
+                <p class="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300">
+                    <span id="currentDate"></span> • Learn something new every day!
+                </p>
+            </div>
+            
+            <div class="flex items-center space-x-4 sm:space-x-6">
+                <div class="text-center">
+                    <div class="text-2xl sm:text-3xl mb-1 sm:mb-2">🔥</div>
+                    <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Streak</div>
+                    <div class="text-xl sm:text-2xl font-bold text-orange-500" id="streakCount">3</div>
+                </div>
+                
+                <button id="backBtn" class="btn-fun gradient-secondary text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-bold shadow-lg text-sm sm:text-base">
+                    <i class="fas fa-arrow-left mr-1 sm:mr-2"></i>
+                    <span class="hidden sm:inline">Back to Dashboard</span>
+                    <span class="sm:hidden">Back</span>
+                </button>
+            </div>
+        </div>
+        
+
+    </div>
+
+    <!-- Category Selection Section -->
+    <div class="glass-morphism rounded-3xl p-4 sm:p-6 lg:p-10 mb-6 lg:mb-8 shadow-2xl animate__animated animate__fadeInUp">
+        <div class="text-center mb-8 lg:mb-12">
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black text-gradient mb-3 lg:mb-4 floating">
+                What do you want to learn today? 🎯
+            </h2>
+            <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300">
+                Choose a category and start your ASL learning journey!
+            </p>
+        </div>
+
+        <!-- Learning Categories Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <!-- ASL Alphabets -->
+            <div class="category-card glass-morphism rounded-2xl p-4 sm:p-6 text-center shadow-xl card-hover cursor-pointer" data-category="alphabets">
+                <div class="text-4xl sm:text-5xl mb-3 sm:mb-4">🔤</div>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-2">ASL Alphabets</h3>
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">A-Z with hand signs</p>
+                <div class="text-xs text-purple-600 dark:text-purple-400 font-medium">26 signs</div>
+            </div>
+
+            <!-- Numbers -->
+            <div class="category-card glass-morphism rounded-2xl p-4 sm:p-6 text-center shadow-xl card-hover cursor-pointer" data-category="numbers">
+                <div class="text-4xl sm:text-5xl mb-3 sm:mb-4">🔢</div>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-2">Numbers</h3>
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">1-10 basic numbers</p>
+                <div class="text-xs text-blue-600 dark:text-blue-400 font-medium">10 signs</div>
+            </div>
+
+            <!-- Animals & Birds -->
+            <div class="category-card glass-morphism rounded-2xl p-4 sm:p-6 text-center shadow-xl card-hover cursor-pointer" data-category="animals">
+                <div class="text-4xl sm:text-5xl mb-3 sm:mb-4">🐾</div>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-2">Animals & Birds</h3>
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">Dog, cat, bird, fish</p>
+                <div class="text-xs text-green-600 dark:text-green-400 font-medium">15 signs</div>
+            </div>
+
+            <!-- Food & Drinks -->
+            <div class="category-card glass-morphism rounded-2xl p-4 sm:p-6 text-center shadow-xl card-hover cursor-pointer" data-category="food">
+                <div class="text-4xl sm:text-5xl mb-3 sm:mb-4">🍎</div>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mb-2">Food & Drinks</h3>
+                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3">Apple, water, pizza</p>
+                <div class="text-xs text-orange-600 dark:text-orange-400 font-medium">12 signs</div>
+            </div>
+
+            <!-- Daily Greetings -->
+            <div class="category-card glass-morphism rounded-2xl p-6 text-center shadow-xl card-hover cursor-pointer" data-category="greetings">
+                <div class="text-5xl mb-4">👋</div>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Daily Greetings</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Hello, thank you, bye</p>
+                <div class="text-xs text-pink-600 dark:text-pink-400 font-medium">10 signs</div>
+            </div>
+
+            <!-- Emotions -->
+            <div class="category-card glass-morphism rounded-2xl p-6 text-center shadow-xl card-hover cursor-pointer" data-category="emotions">
+                <div class="text-5xl mb-4">😊</div>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Emotions</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Happy, sad, angry</p>
+                <div class="text-xs text-red-600 dark:text-red-400 font-medium">8 signs</div>
+            </div>
+
+            <!-- Relations -->
+            <div class="category-card glass-morphism rounded-2xl p-6 text-center shadow-xl card-hover cursor-pointer" data-category="relations">
+                <div class="text-5xl mb-4">👨‍👩‍👧‍👦</div>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Relations</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Family, friends, people</p>
+                <div class="text-xs text-indigo-600 dark:text-indigo-400 font-medium">10 signs</div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+    <!-- Learning Stats -->
+    <div class="glass-morphism rounded-2xl p-6 shadow-xl">
+        <div class="text-center mb-6">
+            <h3 class="text-2xl font-bold text-gradient mb-2">Your Learning Journey 🚀</h3>
+            <p class="text-gray-600 dark:text-gray-300">Track your ASL learning progress across all categories</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-center">
+            <div class="glass-morphism p-3 sm:p-4 rounded-xl">
+                <div class="text-xl sm:text-2xl mb-1 sm:mb-2">📚</div>
+                <div class="text-base sm:text-lg font-bold text-blue-600" id="totalLessons">0</div>
+                <div class="text-xs text-gray-500">Lessons Completed</div>
+            </div>
+            
+            <div class="glass-morphism p-3 sm:p-4 rounded-xl">
+                <div class="text-xl sm:text-2xl mb-1 sm:mb-2">⭐</div>
+                <div class="text-base sm:text-lg font-bold text-yellow-600" id="bookmarkedCount">0</div>
+                <div class="text-xs text-gray-500">Signs Bookmarked</div>
+            </div>
+            
+            <div class="glass-morphism p-3 sm:p-4 rounded-xl">
+                <div class="text-xl sm:text-2xl mb-1 sm:mb-2">🏆</div>
+                <div class="text-base sm:text-lg font-bold text-purple-600" id="totalXP">0</div>
+                <div class="text-xs text-gray-500">XP Earned</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Completion Modal -->
+<div id="completionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="glass-morphism rounded-3xl p-10 max-w-lg w-full text-center shadow-2xl neon-glow animate__animated animate__bounceIn">
+        <div class="text-8xl mb-6 animate-bounce">🎉</div>
+        <h2 class="text-3xl font-bold text-gradient mb-6">Lesson Complete!</h2>
+        <div class="glass-morphism p-6 rounded-2xl mb-8">
+            <div class="text-4xl font-bold text-green-600 mb-4">+150 XP</div>
+            <p class="text-gray-600 dark:text-gray-300">You learned 5 new animal signs today!</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button id="takeQuizBtn" class="btn-fun gradient-success text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-brain mr-2"></i>
+                Take Quiz
+            </button>
+            <button id="reviewSignsBtn" class="btn-fun gradient-primary text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-redo mr-2"></i>
+                Review Signs
+            </button>
+            <button id="backToDashboardBtn" class="btn-fun gradient-secondary text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-home mr-2"></i>
+                Dashboard
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Learning data for all categories
+    const learningData = {
+        alphabets: [
+            { word: 'A', image: '/static/images/asl/A.jpg', audio: 'a' },
+            { word: 'B', image: '/static/images/asl/B.jpg', audio: 'b' },
+            { word: 'C', image: '/static/images/asl/C.jpg', audio: 'c' },
+            { word: 'D', image: '/static/images/asl/D.jpg', audio: 'd' },
+            { word: 'E', image: '/static/images/asl/E.jpg', audio: 'e' },
+            { word: 'F', image: '/static/images/asl/F.jpg', audio: 'f' },
+            { word: 'G', image: '/static/images/asl/G.jpg', audio: 'g' },
+            { word: 'H', image: '/static/images/asl/H.jpg', audio: 'h' },
+            { word: 'I', image: '/static/images/asl/I.jpg', audio: 'i' },
+            { word: 'J', image: '/static/images/asl/J.jpg', audio: 'j' }
+        ],
+        numbers: [
+            { word: '1', image: '/static/images/asl/A.jpg', audio: 'one' },
+            { word: '2', image: '/static/images/asl/B.jpg', audio: 'two' },
+            { word: '3', image: '/static/images/asl/C.jpg', audio: 'three' },
+            { word: '4', image: '/static/images/asl/D.jpg', audio: 'four' },
+            { word: '5', image: '/static/images/asl/E.jpg', audio: 'five' },
+            { word: '6', image: '/static/images/asl/F.jpg', audio: 'six' },
+            { word: '7', image: '/static/images/asl/G.jpg', audio: 'seven' },
+            { word: '8', image: '/static/images/asl/H.jpg', audio: 'eight' },
+            { word: '9', image: '/static/images/asl/I.jpg', audio: 'nine' },
+            { word: '10', image: '/static/images/asl/J.jpg', audio: 'ten' }
+        ],
+        animals: [
+            { word: 'Dog', image: '/static/images/asl/D.jpg', audio: 'dog' },
+            { word: 'Cat', image: '/static/images/asl/C.jpg', audio: 'cat' },
+            { word: 'Bird', image: '/static/images/asl/B.jpg', audio: 'bird' },
+            { word: 'Fish', image: '/static/images/asl/F.jpg', audio: 'fish' },
+            { word: 'Horse', image: '/static/images/asl/H.jpg', audio: 'horse' }
+        ],
+        food: [
+            { word: 'Apple', image: '/static/images/asl/A.jpg', audio: 'apple' },
+            { word: 'Water', image: '/static/images/asl/W.jpg', audio: 'water' },
+            { word: 'Pizza', image: '/static/images/asl/P.jpg', audio: 'pizza' },
+            { word: 'Milk', image: '/static/images/asl/M.jpg', audio: 'milk' }
+        ],
+        greetings: [
+            { word: 'Hello', image: '/static/images/asl/H.jpg', audio: 'hello' },
+            { word: 'Thank You', image: '/static/images/asl/T.jpg', audio: 'thank-you' },
+            { word: 'Please', image: '/static/images/asl/P.jpg', audio: 'please' },
+            { word: 'Goodbye', image: '/static/images/asl/G.jpg', audio: 'goodbye' }
+        ],
+        emotions: [
+            { word: 'Happy', image: '/static/images/asl/H.jpg', audio: 'happy' },
+            { word: 'Sad', image: '/static/images/asl/S.jpg', audio: 'sad' },
+            { word: 'Angry', image: '/static/images/asl/A.jpg', audio: 'angry' },
+            { word: 'Surprised', image: '/static/images/asl/S.jpg', audio: 'surprised' }
+        ],
+        relations: [
+            { word: 'Mother', image: '/static/images/asl/M.jpg', audio: 'mother' },
+            { word: 'Father', image: '/static/images/asl/F.jpg', audio: 'father' },
+            { word: 'Sister', image: '/static/images/asl/S.jpg', audio: 'sister' },
+            { word: 'Brother', image: '/static/images/asl/B.jpg', audio: 'brother' }
+        ],
+        objects: [
+            { word: 'Book', image: '/static/images/asl/B.jpg', audio: 'book' },
+            { word: 'Phone', image: '/static/images/asl/P.jpg', audio: 'phone' },
+            { word: 'Chair', image: '/static/images/asl/C.jpg', audio: 'chair' },
+            { word: 'House', image: '/static/images/asl/H.jpg', audio: 'house' }
+        ]
+    };
+
+    // Game state
+    let currentLesson = 'animals';
+    let currentIndex = 0;
+    let completedSigns = [];
+    let bookmarkedSigns = [];
+
+    // Sound effects
+    function playSound(frequency, duration, type = 'sine') {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        } catch (e) {
+            console.log('Audio not supported');
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        setCurrentDate();
+        loadProgress();
+    });
+
+    function setupEventListeners() {
+        document.getElementById('backBtn').addEventListener('click', () => {
+            playSound(600, 0.1);
+            window.location.href = '/dashboard/';
+        });
+        
+        // Category selection
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('click', () => {
+                playSound(700, 0.2);
+                const category = card.dataset.category;
+                selectCategory(category);
+            });
+        });
+        
+
+    }
+
+    function setCurrentDate() {
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').textContent = today.toLocaleDateString('en-US', options);
+    }
+
+    function selectCategory(category) {
+        const categoryUrls = {
+            alphabets: '/learn/alphabets/',
+            numbers: '/learn/numbers/',
+            animals: '/learn/animals/',
+            food: '/learn/food/',
+            greetings: '/learn/greetings/',
+            emotions: '/learn/emotions/',
+            relations: '/learn/relations/',
+            objects: '/learn/objects/'
+        };
+        
+        if (categoryUrls[category]) {
+            window.location.href = categoryUrls[category];
+        } else {
+            showNotification('Coming soon!');
+        }
+    }
+
+
+
+
+
+
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-8 right-8 glass-morphism rounded-2xl p-4 text-center shadow-xl z-50 animate__animated animate__slideInRight';
+        notification.innerHTML = `
+            <div class="text-lg font-bold text-gray-800 dark:text-white">${message}</div>
+        `;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('animate__slideOutRight');
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
+    }
+
+    // Load saved progress
+    function loadProgress() {
+        const saved = localStorage.getItem('bookmarkedSigns');
+        if (saved) {
+            bookmarkedSigns = JSON.parse(saved);
+        }
+        
+        const stats = JSON.parse(localStorage.getItem('learningStats') || '{}');
+        const gameStats = JSON.parse(localStorage.getItem('gameStats') || '{}');
+        
+        // Calculate total lessons completed
+        let totalLessons = 0;
+        
+        // Check each category completion
+        if (stats.alphabetsCompleted) totalLessons++;
+        if (stats.numbersCompleted) totalLessons++;
+        if (stats.animalsCompleted) totalLessons++;
+        if (stats.foodCompleted) totalLessons++;
+        if (stats.greetingsCompleted) totalLessons++;
+        if (stats.emotionsCompleted) totalLessons++;
+        if (stats.relationsCompleted) totalLessons++;
+        
+        // Add memory games
+        totalLessons += gameStats.memoryMatchGames || 0;
+        
+        document.getElementById('totalLessons').textContent = totalLessons;
+        document.getElementById('bookmarkedCount').textContent = bookmarkedSigns.length;
+        document.getElementById('totalXP').textContent = gameStats.totalXP || 0;
+    }
+
+    // Load progress on page load
+    loadProgress();
+</script>
+{% endblock %}

@@ -1,0 +1,680 @@
+{% extends 'predictapp/base_enhanced.html' %}
+
+{% block title %}Memory Match - Learn ASL{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <!-- Main Screen -->
+    <div id="mainScreen" class="screen active animate__animated animate__fadeIn">
+        <div class="text-center mb-12">
+            <h1 class="text-6xl font-black text-gradient mb-6 floating">
+                Memory Match – Learn ASL 🧠
+            </h1>
+            <div class="glass-morphism rounded-3xl p-8 max-w-2xl mx-auto mb-8 neon-glow">
+                <p class="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                    🎯 Flip two cards at a time. Match the ASL sign with its letter/word. 
+                    <br>Challenge your memory and learn ASL alphabet! ✨
+                </p>
+            </div>
+        </div>
+
+        <!-- Back to Dashboard Button -->
+        <div class="mb-8">
+            <a href="/dashboard/" class="btn-fun gradient-secondary text-white px-6 py-3 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 shadow-xl inline-flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Level Selector -->
+        <div class="glass-morphism rounded-3xl p-10 mb-12 max-w-4xl mx-auto shadow-2xl">
+            <h2 class="text-3xl font-bold text-gradient mb-8 text-center">Choose Your Challenge Level</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <button class="level-btn active gradient-success text-white p-8 rounded-2xl shadow-xl card-hover" data-level="easy">
+                    <div class="text-5xl mb-4">🟢</div>
+                    <h3 class="text-2xl font-bold mb-3">Easy</h3>
+                    <p class="text-sm opacity-90 mb-4">3x4 Grid • 6 Pairs</p>
+                    <div class="text-xs opacity-75">Perfect for beginners!</div>
+                </button>
+                
+                <button class="level-btn gradient-warning text-white p-8 rounded-2xl shadow-xl card-hover" data-level="medium">
+                    <div class="text-5xl mb-4">🟡</div>
+                    <h3 class="text-2xl font-bold mb-3">Medium</h3>
+                    <p class="text-sm opacity-90 mb-4">4x4 Grid • 8 Pairs</p>
+                    <div class="text-xs opacity-75">Good challenge!</div>
+                </button>
+                
+                <button class="level-btn gradient-secondary text-white p-8 rounded-2xl shadow-xl card-hover" data-level="hard">
+                    <div class="text-5xl mb-4">🔴</div>
+                    <h3 class="text-2xl font-bold mb-3">Hard</h3>
+                    <p class="text-sm opacity-90 mb-4">5x6 Grid • 15 Pairs</p>
+                    <div class="text-xs opacity-75">Expert level!</div>
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button id="startBtn" class="btn-fun gradient-primary text-white px-16 py-6 rounded-3xl font-bold text-2xl shadow-2xl neon-glow transform hover:scale-105 transition-all duration-300">
+                <i class="fas fa-play mr-3"></i>
+                Start Game 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen hidden">
+        <!-- HUD -->
+        <div class="glass-morphism rounded-2xl p-6 mb-8 shadow-xl animate__animated animate__slideInDown">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="flex items-center justify-center space-x-2">
+                    <i class="fas fa-clock text-blue-500 text-xl"></i>
+                    <div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Time</div>
+                        <div class="text-2xl font-bold text-blue-600" id="timer">00:00</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-center space-x-2">
+                    <i class="fas fa-star text-yellow-500 text-xl"></i>
+                    <div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Score</div>
+                        <div class="text-2xl font-bold text-yellow-600" id="score">0</div>
+                        <div id="stars" class="text-lg">⭐⭐⭐</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-center space-x-2">
+                    <i class="fas fa-mouse-pointer text-purple-500 text-xl"></i>
+                    <div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Moves</div>
+                        <div class="text-2xl font-bold text-purple-600" id="moves">0</div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-center">
+                    <button id="backBtn" class="btn-fun gradient-secondary text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Grid -->
+        <div class="flex justify-center mb-8">
+            <div id="cardGrid" class="card-grid animate__animated animate__zoomIn"></div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="glass-morphism rounded-2xl p-6 shadow-xl">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="font-bold text-gray-800 dark:text-white">Progress:</span>
+                    <span id="progressText" class="text-sm text-gray-600 dark:text-gray-400">(0%)</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
+                    <div id="progressFill" class="gradient-primary h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <!-- Control Buttons -->
+            <div class="flex flex-wrap justify-center gap-4">
+                <button id="hintBtn" class="btn-fun gradient-warning text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                    <i class="fas fa-lightbulb mr-2"></i>
+                    Hint (-50 pts)
+                </button>
+                <button id="restartBtn" class="btn-fun gradient-secondary text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                    <i class="fas fa-redo mr-2"></i>
+                    Restart
+                </button>
+                <button id="menuBtn" class="btn-fun gradient-primary text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                    <i class="fas fa-home mr-2"></i>
+                    Back to Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Win Screen -->
+    <div id="winScreen" class="screen hidden text-center">
+        <div class="animate__animated animate__bounceIn">
+            <div class="text-8xl mb-8 animate-bounce">🎉</div>
+            <h2 class="text-5xl font-black text-gradient mb-8 floating">
+                Well Done! You matched all signs! 🏆
+            </h2>
+            
+            <div class="glass-morphism rounded-3xl p-12 max-w-2xl mx-auto mb-12 shadow-2xl neon-glow">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <div class="text-4xl mb-3">⏱️</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Time Taken</div>
+                        <div class="text-2xl font-bold text-blue-600" id="finalTime">00:00</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">🎯</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Number of Moves</div>
+                        <div class="text-2xl font-bold text-purple-600" id="finalMoves">0</div>
+                    </div>
+                    <div>
+                        <div class="text-4xl mb-3">⭐</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mb-2">Stars Earned</div>
+                        <div class="text-2xl font-bold text-yellow-600" id="finalStars">⭐⭐⭐</div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 p-6 gradient-success rounded-2xl text-white">
+                    <div class="text-3xl font-bold mb-2">+<span id="xpEarned">100</span> XP</div>
+                    <div class="text-sm opacity-90">Amazing job learning ASL!</div>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-6">
+                <button id="nextLevelBtn" class="btn-fun gradient-success text-white px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl">
+                    <i class="fas fa-arrow-right mr-3"></i>
+                    Next Level 🚀
+                </button>
+                <button id="replayBtn" class="btn-fun gradient-primary text-white px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl">
+                    <i class="fas fa-redo mr-3"></i>
+                    Play Again 🎮
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Popup Messages -->
+<div id="popup" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 hidden">
+    <div class="glass-morphism rounded-2xl p-6 text-center shadow-2xl neon-glow animate__animated">
+        <div id="popupIcon" class="text-4xl mb-3"></div>
+        <div id="popupText" class="text-xl font-bold text-gray-800 dark:text-white"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Game state
+    let gameState = {
+        level: 'easy',
+        cards: [],
+        flippedCards: [],
+        matchedPairs: 0,
+        totalPairs: 0,
+        moves: 0,
+        score: 1000,
+        timer: 0,
+        gameTimer: null,
+        startTime: null,
+        isGameActive: false
+    };
+
+    // ASL alphabet data with image paths
+    const aslData = {
+        'A': '/static/images/asl/A.jpg', 'B': '/static/images/asl/B.jpg', 'C': '/static/images/asl/C.jpg',
+        'D': '/static/images/asl/D.jpg', 'E': '/static/images/asl/E.jpg', 'F': '/static/images/asl/F.jpg',
+        'G': '/static/images/asl/G.jpg', 'H': '/static/images/asl/H.jpg', 'I': '/static/images/asl/I.jpg',
+        'J': '/static/images/asl/J.jpg', 'K': '/static/images/asl/K.jpg', 'L': '/static/images/asl/L.jpg',
+        'M': '/static/images/asl/M.jpg', 'N': '/static/images/asl/N.jpg', 'O': '/static/images/asl/O.jpg',
+        'P': '/static/images/asl/P.jpg', 'Q': '/static/images/asl/Q.jpg', 'R': '/static/images/asl/R.jpg',
+        'S': '/static/images/asl/S.jpg', 'T': '/static/images/asl/T.jpg', 'U': '/static/images/asl/U.jpg',
+        'V': '/static/images/asl/V.jpg', 'W': '/static/images/asl/W.jpg', 'X': '/static/images/asl/X.jpg',
+        'Y': '/static/images/asl/Y.jpg', 'Z': '/static/images/asl/Z.jpg'
+    };
+
+    // Level configurations
+    const levelConfig = {
+        easy: { rows: 3, cols: 4, pairs: 6 },
+        medium: { rows: 4, cols: 4, pairs: 8 },
+        hard: { rows: 5, cols: 6, pairs: 15 }
+    };
+
+    // Sound effects
+    const sounds = {
+        flip: () => playSound(800, 0.1, 'sine'),
+        match: () => playSound([523, 659, 784], 0.3, 'sine'),
+        wrong: () => playSound([300, 250], 0.2, 'sawtooth'),
+        win: () => playSound([523, 659, 784, 1047], 0.4, 'sine'),
+        hint: () => playSound([400, 500, 600], 0.2, 'triangle'),
+        button: () => playSound(600, 0.1, 'square')
+    };
+
+    function playSound(frequency, duration, type = 'sine') {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            if (Array.isArray(frequency)) {
+                frequency.forEach((freq, i) => {
+                    setTimeout(() => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                        oscillator.type = type;
+                        
+                        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + duration);
+                    }, i * 150);
+                });
+            } else {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                oscillator.type = type;
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            }
+        } catch (e) {
+            console.log('Audio not supported');
+        }
+    }
+
+    // Initialize game
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        updateLevelSelection();
+    });
+
+    function setupEventListeners() {
+        // Level selection with sound
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                sounds.button();
+                document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                gameState.level = this.dataset.level;
+                updateLevelSelection();
+            });
+        });
+
+        // Game controls with sound
+        document.getElementById('startBtn').addEventListener('click', () => { sounds.button(); startGame(); });
+        document.getElementById('backBtn').addEventListener('click', () => { sounds.button(); window.location.href = '/dashboard/'; });
+        document.getElementById('hintBtn').addEventListener('click', () => { sounds.hint(); useHint(); });
+        document.getElementById('restartBtn').addEventListener('click', () => { sounds.button(); restartGame(); });
+        document.getElementById('menuBtn').addEventListener('click', () => { sounds.button(); showMainScreen(); });
+        document.getElementById('nextLevelBtn').addEventListener('click', () => { sounds.button(); nextLevel(); });
+        document.getElementById('replayBtn').addEventListener('click', () => { sounds.button(); restartGame(); });
+    }
+
+    function updateLevelSelection() {
+        const config = levelConfig[gameState.level];
+        // Visual feedback for level selection
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            if (btn.dataset.level === gameState.level) {
+                btn.classList.add('animate__animated', 'animate__pulse');
+                setTimeout(() => btn.classList.remove('animate__animated', 'animate__pulse'), 1000);
+            }
+        });
+    }
+
+    function startGame() {
+        showGameScreen();
+        initializeGame();
+        startTimer();
+    }
+
+    function initializeGame() {
+        const config = levelConfig[gameState.level];
+        gameState.totalPairs = config.pairs;
+        gameState.matchedPairs = 0;
+        gameState.moves = 0;
+        gameState.score = 1000;
+        gameState.timer = 0;
+        gameState.flippedCards = [];
+        gameState.isGameActive = true;
+
+        createCardGrid();
+        updateUI();
+    }
+
+    function createCardGrid() {
+        const config = levelConfig[gameState.level];
+        const grid = document.getElementById('cardGrid');
+        
+        // Set grid layout
+        grid.className = `card-grid grid gap-3 animate__animated animate__zoomIn`;
+        grid.style.gridTemplateColumns = `repeat(${config.cols}, 1fr)`;
+        grid.style.maxWidth = `${config.cols * 110}px`;
+        
+        // Generate card pairs
+        const letters = Object.keys(aslData).slice(0, config.pairs);
+        const cardData = [];
+        
+        letters.forEach(letter => {
+            cardData.push({ type: 'letter', value: letter, id: `letter-${letter}` });
+            cardData.push({ type: 'sign', value: aslData[letter], letter: letter, id: `sign-${letter}` });
+        });
+        
+        // Shuffle cards
+        gameState.cards = shuffleArray(cardData);
+        
+        // Create card elements
+        grid.innerHTML = '';
+        gameState.cards.forEach((cardData, index) => {
+            const card = createCardElement(cardData, index);
+            grid.appendChild(card);
+        });
+    }
+
+    function createCardElement(cardData, index) {
+        const card = document.createElement('div');
+        card.className = 'card relative w-24 h-24 cursor-pointer transform transition-all duration-500 preserve-3d';
+        card.dataset.index = index;
+        card.dataset.type = cardData.type;
+        card.dataset.value = cardData.value;
+        card.dataset.letter = cardData.letter || cardData.value;
+        
+        const frontContent = cardData.type === 'letter' 
+            ? `<div class="text-3xl font-bold text-gray-800 dark:text-white">${cardData.value}</div>`
+            : `<img src="${cardData.value}" alt="ASL ${cardData.letter}" class="w-full h-full object-cover rounded-xl">`;
+        
+        card.innerHTML = `
+            <div class="card-face card-back absolute inset-0 glass-morphism rounded-xl flex items-center justify-center text-2xl font-bold text-purple-600 backface-hidden shadow-lg">
+                ❓
+            </div>
+            <div class="card-face card-front absolute inset-0 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center shadow-lg backface-hidden rotate-y-180">
+                ${frontContent}
+            </div>
+        `;
+        
+        card.addEventListener('click', () => flipCard(index));
+        return card;
+    }
+
+    function flipCard(index) {
+        if (!gameState.isGameActive) return;
+        if (gameState.flippedCards.length >= 2) return;
+        if (gameState.flippedCards.includes(index)) return;
+        
+        const card = document.querySelector(`[data-index="${index}"]`);
+        if (card.classList.contains('matched')) return;
+        
+        // Flip animation with sound
+        sounds.flip();
+        card.classList.add('flipped');
+        gameState.flippedCards.push(index);
+        
+        // Show learning popup for ASL signs
+        const cardData = gameState.cards[index];
+        if (cardData.type === 'sign') {
+            showLearningPopup(cardData.letter);
+        }
+        
+        if (gameState.flippedCards.length === 2) {
+            gameState.moves++;
+            updateUI();
+            setTimeout(checkMatch, 800);
+        }
+    }
+
+    function checkMatch() {
+        const [index1, index2] = gameState.flippedCards;
+        const card1 = gameState.cards[index1];
+        const card2 = gameState.cards[index2];
+        
+        const isMatch = (card1.type === 'letter' && card2.type === 'sign' && card1.value === card2.letter) ||
+                       (card1.type === 'sign' && card2.type === 'letter' && card1.letter === card2.value);
+        
+        if (isMatch) {
+            handleMatch(index1, index2);
+        } else {
+            handleMismatch(index1, index2);
+        }
+        
+        gameState.flippedCards = [];
+    }
+
+    function handleMatch(index1, index2) {
+        const card1 = document.querySelector(`[data-index="${index1}"]`);
+        const card2 = document.querySelector(`[data-index="${index2}"]`);
+        
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        
+        // Visual feedback
+        [card1, card2].forEach(card => {
+            card.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+            card.style.color = 'white';
+            card.classList.add('animate__animated', 'animate__bounceIn');
+        });
+        
+        gameState.matchedPairs++;
+        gameState.score += 100;
+        
+        sounds.match();
+        showPopup('✅', 'Correct!', 'animate__bounceIn');
+        
+        updateProgress();
+        updateUI();
+        
+        if (gameState.matchedPairs === gameState.totalPairs) {
+            setTimeout(endGame, 1000);
+        }
+    }
+
+    function handleMismatch(index1, index2) {
+        const card1 = document.querySelector(`[data-index="${index1}"]`);
+        const card2 = document.querySelector(`[data-index="${index2}"]`);
+        
+        // Shake animation
+        [card1, card2].forEach(card => {
+            card.classList.add('animate__animated', 'animate__shakeX');
+        });
+        
+        sounds.wrong();
+        showPopup('❌', 'Try Again!', 'animate__shakeX');
+        
+        setTimeout(() => {
+            card1.classList.remove('flipped', 'animate__animated', 'animate__shakeX');
+            card2.classList.remove('flipped', 'animate__animated', 'animate__shakeX');
+        }, 1000);
+        
+        gameState.score = Math.max(0, gameState.score - 10);
+        updateUI();
+    }
+
+    function showLearningPopup(letter) {
+        const popup = document.createElement('div');
+        popup.className = 'fixed bottom-8 left-1/2 transform -translate-x-1/2 glass-morphism rounded-2xl p-4 text-center shadow-xl z-40 animate__animated animate__slideInUp';
+        popup.innerHTML = `
+            <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">This is</div>
+            <div class="text-xl font-bold text-purple-600 dark:text-purple-400">${letter}</div>
+        `;
+        
+        document.body.appendChild(popup);
+        setTimeout(() => {
+            popup.classList.add('animate__slideOutDown');
+            setTimeout(() => popup.remove(), 500);
+        }, 2000);
+    }
+
+    function useHint() {
+        if (gameState.score < 50) return;
+        
+        gameState.score -= 50;
+        updateUI();
+        
+        // Briefly show all cards
+        document.querySelectorAll('.card:not(.matched)').forEach(card => {
+            card.classList.add('flipped');
+        });
+        
+        showPopup('💡', 'Hint Used!', 'animate__flash');
+        
+        setTimeout(() => {
+            document.querySelectorAll('.card:not(.matched)').forEach(card => {
+                if (!gameState.flippedCards.includes(parseInt(card.dataset.index))) {
+                    card.classList.remove('flipped');
+                }
+            });
+        }, 2000);
+    }
+
+    function startTimer() {
+        gameState.startTime = Date.now();
+        gameState.gameTimer = setInterval(() => {
+            gameState.timer++;
+            updateTimer();
+        }, 1000);
+    }
+
+    function updateTimer() {
+        const minutes = Math.floor(gameState.timer / 60);
+        const seconds = gameState.timer % 60;
+        document.getElementById('timer').textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function updateUI() {
+        document.getElementById('score').textContent = gameState.score;
+        document.getElementById('moves').textContent = gameState.moves;
+        
+        // Update stars based on performance
+        const stars = getStarRating();
+        document.getElementById('stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
+    }
+
+    function updateProgress() {
+        const progress = (gameState.matchedPairs / gameState.totalPairs) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('progressText').textContent = `(${Math.round(progress)}%)`;
+    }
+
+    function getStarRating() {
+        if (gameState.moves <= gameState.totalPairs * 1.5) return 3;
+        if (gameState.moves <= gameState.totalPairs * 2) return 2;
+        return 1;
+    }
+
+    function endGame() {
+        gameState.isGameActive = false;
+        clearInterval(gameState.gameTimer);
+        
+        sounds.win();
+        const stars = getStarRating();
+        const xpEarned = gameState.score + (stars * 50);
+        
+        // Update final stats
+        document.getElementById('finalTime').textContent = document.getElementById('timer').textContent;
+        document.getElementById('finalMoves').textContent = gameState.moves;
+        document.getElementById('finalStars').textContent = '⭐'.repeat(stars);
+        document.getElementById('xpEarned').textContent = xpEarned;
+        
+        // Save game stats
+        saveGameStats(xpEarned);
+        
+        setTimeout(() => showWinScreen(), 1000);
+    }
+
+    function saveGameStats(xpEarned) {
+        const stats = JSON.parse(localStorage.getItem('gameStats') || '{}');
+        stats.memoryMatchGames = (stats.memoryMatchGames || 0) + 1;
+        stats.totalXP = (stats.totalXP || 0) + xpEarned;
+        stats.lastPlayed = new Date().toISOString();
+        localStorage.setItem('gameStats', JSON.stringify(stats));
+    }
+
+    function showPopup(icon, text, animation) {
+        const popup = document.getElementById('popup');
+        document.getElementById('popupIcon').textContent = icon;
+        document.getElementById('popupText').textContent = text;
+        
+        popup.classList.remove('hidden');
+        popup.querySelector('.glass-morphism').className = `glass-morphism rounded-2xl p-6 text-center shadow-2xl neon-glow animate__animated ${animation}`;
+        
+        setTimeout(() => {
+            popup.classList.add('hidden');
+        }, 1500);
+    }
+
+    function restartGame() {
+        showGameScreen();
+        clearInterval(gameState.gameTimer);
+        initializeGame();
+        startTimer();
+    }
+
+    function nextLevel() {
+        const levels = ['easy', 'medium', 'hard'];
+        const currentIndex = levels.indexOf(gameState.level);
+        if (currentIndex < levels.length - 1) {
+            gameState.level = levels[currentIndex + 1];
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.level === gameState.level) {
+                    btn.classList.add('active');
+                }
+            });
+            restartGame();
+        } else {
+            showMainScreen();
+        }
+    }
+
+    function showMainScreen() {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.add('hidden');
+            screen.classList.remove('active');
+        });
+        document.getElementById('mainScreen').classList.remove('hidden');
+        document.getElementById('mainScreen').classList.add('active');
+        clearInterval(gameState.gameTimer);
+    }
+
+    function showGameScreen() {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.add('hidden');
+            screen.classList.remove('active');
+        });
+        document.getElementById('gameScreen').classList.remove('hidden');
+        document.getElementById('gameScreen').classList.add('active');
+    }
+
+    function showWinScreen() {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.add('hidden');
+            screen.classList.remove('active');
+        });
+        document.getElementById('winScreen').classList.remove('hidden');
+        document.getElementById('winScreen').classList.add('active');
+    }
+
+    function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    // CSS for card flip animation
+    const style = document.createElement('style');
+    style.textContent = `
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .card.flipped { transform: rotateY(180deg); }
+        .card.matched { 
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+{% endblock %}

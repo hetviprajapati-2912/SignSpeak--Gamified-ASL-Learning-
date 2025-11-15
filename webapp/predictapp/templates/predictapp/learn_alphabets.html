@@ -1,0 +1,471 @@
+{% extends 'predictapp/base_enhanced.html' %}
+
+{% block title %}ASL Alphabets - Learn ASL{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <!-- Header Section -->
+    <div class="glass-morphism rounded-2xl p-6 mb-8 shadow-xl animate__animated animate__slideInDown">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                <button id="backBtn" class="btn-fun gradient-secondary text-white px-4 py-2 rounded-xl font-bold shadow-lg">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back
+                </button>
+                <h1 class="text-3xl font-black text-gradient">ASL Alphabets 🔤</h1>
+            </div>
+            
+            <div class="flex items-center space-x-6">
+                <div class="text-center">
+                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Progress</div>
+                    <div class="text-lg font-bold text-blue-600" id="progressText">1/26 learned</div>
+                </div>
+                <div class="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                    <div id="progressBar" class="gradient-primary h-3 rounded-full transition-all duration-500" style="width: 4%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Learning Area -->
+    <div class="glass-morphism rounded-3xl p-4 sm:p-6 lg:p-8 mb-8 shadow-2xl neon-glow animate__animated animate__zoomIn">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+            <!-- ASL Sign -->
+            <div class="text-center order-1 lg:order-1">
+                <img id="signImage" src="/static/images/asl/A.jpg" alt="ASL Sign A" 
+                     class="w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80 mx-auto rounded-3xl shadow-2xl object-cover">
+            </div>
+            
+            <!-- Letter & Controls -->
+            <div class="text-center flex flex-col justify-center order-2 lg:order-2">
+                <h2 id="currentLetter" class="text-6xl sm:text-7xl lg:text-8xl font-black text-gradient mb-4 lg:mb-6 floating">A</h2>
+                
+                <div class="space-y-3 sm:space-y-4">
+                    <button id="pronounceBtn" class="btn-fun gradient-success text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg w-full">
+                        <i class="fas fa-volume-up mr-2 sm:mr-3"></i>
+                        Pronounce
+                    </button>
+                    <button id="bookmarkBtn" class="btn-fun gradient-secondary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg w-full">
+                        <i class="fas fa-star mr-2 sm:mr-3"></i>
+                        Bookmark
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Fun Facts & Tips -->
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br from-purple-100 to-blue-100 dark:from-purple-900 dark:to-blue-900 rounded-2xl p-6 shadow-lg border border-purple-200 dark:border-purple-700">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-3">💡</div>
+                        <h3 class="text-xl font-bold text-purple-700 dark:text-purple-300">Fun Fact</h3>
+                    </div>
+                    <p id="funFact" class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        Did you know? ASL 'A' is like making a fist with your thumb on the side!
+                    </p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 rounded-2xl p-6 shadow-lg border border-green-200 dark:border-green-700">
+                    <div class="flex items-center mb-4">
+                        <div class="text-3xl mr-3">📝</div>
+                        <h3 class="text-xl font-bold text-green-700 dark:text-green-300">Learning Tip</h3>
+                    </div>
+                    <p id="learningTip" class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        Practice the handshape slowly, then gradually increase speed for muscle memory.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Controls -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:space-x-4 lg:space-x-8 mt-6 lg:mt-8 pt-4 lg:pt-6 border-t border-gray-200 dark:border-gray-700">
+            <button id="prevBtn" class="btn-fun gradient-primary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold w-full sm:w-auto">
+                <i class="fas fa-chevron-left mr-2"></i>
+                <span class="hidden sm:inline">Previous</span>
+                <span class="sm:hidden">Prev</span>
+            </button>
+            
+            <button id="autoPlayBtn" class="btn-fun gradient-success text-white px-4 sm:px-6 py-3 rounded-xl font-bold w-full sm:w-auto">
+                <i class="fas fa-play-circle mr-2"></i>
+                Auto-Play
+            </button>
+            
+            <button id="nextBtn" class="btn-fun gradient-primary text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold w-full sm:w-auto">
+                <span class="hidden sm:inline">Next</span>
+                <span class="sm:hidden">Next</span>
+                <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Dots -->
+    <div class="glass-morphism rounded-2xl p-6 shadow-xl">
+        <div class="text-center mb-4">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white">Alphabet Progress</h3>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2" id="progressDots">
+            <!-- Progress dots will be generated by JavaScript -->
+        </div>
+        
+        <div class="text-center mt-6">
+            <button id="completeBtn" class="btn-fun gradient-success text-white px-12 py-4 rounded-2xl font-bold text-xl shadow-lg hidden">
+                <i class="fas fa-trophy mr-3"></i>
+                Complete Lesson 🎉
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Completion Modal -->
+<div id="completionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-gradient-to-br from-blue-50 to-purple-100 dark:from-gray-800 dark:to-purple-900 rounded-3xl p-10 max-w-lg w-full text-center shadow-2xl border border-blue-200 dark:border-purple-700 animate__animated animate__bounceIn">
+        <div class="text-8xl mb-6 animate-bounce">🎉</div>
+        <h2 class="text-3xl font-bold text-gradient mb-6">Congratulations!</h2>
+        <p class="text-xl text-gray-700 dark:text-gray-300 mb-8">You learned the ASL Alphabet!</p>
+        <div class="bg-gradient-to-r from-green-400 to-green-600 rounded-2xl p-6 mb-8 shadow-lg">
+            <div class="text-4xl font-bold text-white mb-4">+500 XP</div>
+            <p class="text-white/90">Amazing progress in your ASL journey!</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+            <button id="practiceAllBtn" class="btn-fun gradient-warning text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-redo mr-2"></i>
+                Practice All
+            </button>
+            <button id="backToDashboardBtn" class="btn-fun gradient-primary text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-home mr-2"></i>
+                Dashboard
+            </button>
+            <button id="backToLearningBtn" class="btn-fun gradient-secondary text-white px-8 py-4 rounded-2xl font-bold">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Daily Learning
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // ASL Alphabet data
+    const alphabetData = [
+        { letter: 'A', image: '/static/images/asl/A.jpg', funFact: "ASL 'A' is like making a fist with your thumb on the side!", tip: "Keep your thumb pressed against your fingers." },
+        { letter: 'B', image: '/static/images/asl/B.jpg', funFact: "The 'B' sign looks like the number 4 but with the thumb tucked in.", tip: "Keep all four fingers straight and together." },
+        { letter: 'C', image: '/static/images/asl/C.jpg', funFact: "The 'C' handshape mimics the curved shape of the letter C.", tip: "Curve your fingers like you're holding a small ball." },
+        { letter: 'D', image: '/static/images/asl/D.jpg', funFact: "Point up with your index finger while other fingers touch your thumb.", tip: "Make sure only your index finger is pointing up." },
+        { letter: 'E', image: '/static/images/asl/E.jpg', funFact: "All fingertips touch the thumb in the 'E' handshape.", tip: "Curl all fingers down to touch your thumb." },
+        { letter: 'F', image: '/static/images/asl/F.jpg', funFact: "The 'F' looks like the OK sign but with three fingers up.", tip: "Touch your thumb and index finger, keep others straight." },
+        { letter: 'G', image: '/static/images/asl/G.jpg', funFact: "Point sideways with your index finger and thumb extended.", tip: "Like pointing a finger gun to the side." },
+        { letter: 'H', image: '/static/images/asl/H.jpg', funFact: "Two fingers pointing sideways represent the letter H.", tip: "Keep your index and middle fingers together and straight." },
+        { letter: 'I', image: '/static/images/asl/I.jpg', funFact: "Just your pinky finger up, like saying 'I promise!'", tip: "Only your pinky should be extended upward." },
+        { letter: 'J', image: '/static/images/asl/J.jpg', funFact: "Start with 'I' and draw a J shape in the air.", tip: "Move your pinky in a J motion from top to bottom." },
+        { letter: 'K', image: '/static/images/asl/K.jpg', funFact: "Index and middle finger up, thumb between them.", tip: "Your thumb should touch the side of your middle finger." },
+        { letter: 'L', image: '/static/images/asl/L.jpg', funFact: "Makes a perfect L shape with thumb and index finger.", tip: "Keep the L shape clear and distinct." },
+        { letter: 'M', image: '/static/images/asl/M.jpg', funFact: "Three fingers over the thumb, like holding something.", tip: "Wrap your first three fingers over your thumb." },
+        { letter: 'N', image: '/static/images/asl/N.jpg', funFact: "Two fingers over the thumb, similar to M but with two.", tip: "Only your index and middle finger go over the thumb." },
+        { letter: 'O', image: '/static/images/asl/O.jpg', funFact: "All fingertips touch to form a circle like the letter O.", tip: "Make a perfect circle with all your fingertips." },
+        { letter: 'P', image: '/static/images/asl/P.jpg', funFact: "Like K but pointing downward instead of up.", tip: "Point your fingers down while keeping the K handshape." },
+        { letter: 'Q', image: '/static/images/asl/Q.jpg', funFact: "Like G but pointing downward, similar to P and K.", tip: "Point your thumb and index finger down." },
+        { letter: 'R', image: '/static/images/asl/R.jpg', funFact: "Cross your index and middle fingers like crossing fingers for luck.", tip: "Cross your first two fingers over each other." },
+        { letter: 'S', image: '/static/images/asl/S.jpg', funFact: "Make a fist with your thumb in front of your fingers.", tip: "Tuck your thumb in front, not to the side like A." },
+        { letter: 'T', image: '/static/images/asl/T.jpg', funFact: "Thumb pokes up between your index and middle finger.", tip: "Your thumb should be visible between your first two fingers." },
+        { letter: 'U', image: '/static/images/asl/U.jpg', funFact: "Two fingers up together, like a peace sign but closer.", tip: "Keep your index and middle fingers touching." },
+        { letter: 'V', image: '/static/images/asl/V.jpg', funFact: "The classic peace sign - two fingers apart in a V.", tip: "Separate your index and middle fingers clearly." },
+        { letter: 'W', image: '/static/images/asl/W.jpg', funFact: "Three fingers up - index, middle, and ring finger.", tip: "Keep all three fingers straight and separated." },
+        { letter: 'X', image: '/static/images/asl/X.jpg', funFact: "Hook your index finger like you're pulling a trigger.", tip: "Bend just the tip of your index finger." },
+        { letter: 'Y', image: '/static/images/asl/Y.jpg', funFact: "Thumb and pinky out, like 'hang loose' or 'call me'.", tip: "Only thumb and pinky extended, others folded down." },
+        { letter: 'Z', image: '/static/images/asl/Z.jpg', funFact: "Draw a Z in the air with your index finger.", tip: "Trace the letter Z clearly in the air." }
+    ];
+
+    // Game state
+    let currentIndex = 0;
+    let learnedLetters = [];
+    let isAutoPlaying = false;
+    let autoPlayInterval = null;
+
+    // Sound effects
+    function playSound(frequency, duration, type = 'sine') {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+        } catch (e) {
+            console.log('Audio not supported');
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        updateDisplay();
+        createProgressDots();
+        loadProgress();
+    });
+
+    function setupEventListeners() {
+        document.getElementById('backBtn').addEventListener('click', () => {
+            playSound(600, 0.1);
+            window.location.href = '/daily-learning/';
+        });
+        
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            playSound(500, 0.1);
+            previousLetter();
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            playSound(700, 0.1);
+            nextLetter();
+        });
+        
+        document.getElementById('pronounceBtn').addEventListener('click', () => {
+            pronounceLetter();
+        });
+        
+
+        
+
+        
+        document.getElementById('bookmarkBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            bookmarkLetter();
+        });
+        
+        document.getElementById('autoPlayBtn').addEventListener('click', () => {
+            toggleAutoPlay();
+        });
+        
+        document.getElementById('completeBtn').addEventListener('click', () => {
+            playSound([523, 659, 784, 1047], 0.6);
+            showCompletionModal();
+        });
+
+        // Modal buttons
+        document.getElementById('practiceAllBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            currentIndex = 0;
+            updateDisplay();
+            closeModal();
+        });
+        
+
+        
+        document.getElementById('backToDashboardBtn').addEventListener('click', () => {
+            playSound(500, 0.2);
+            window.location.href = '/dashboard/';
+        });
+        
+        document.getElementById('backToLearningBtn').addEventListener('click', () => {
+            playSound(600, 0.2);
+            window.location.href = '/daily-learning/';
+        });
+    }
+
+    function updateDisplay() {
+        const current = alphabetData[currentIndex];
+        
+        // Update main display
+        document.getElementById('signImage').src = current.image;
+        document.getElementById('signImage').alt = `ASL Sign ${current.letter}`;
+        document.getElementById('currentLetter').textContent = current.letter;
+        
+        // Update fun fact and tip
+        document.getElementById('funFact').textContent = current.funFact;
+        document.getElementById('learningTip').textContent = current.tip;
+        
+        // Update navigation buttons
+        document.getElementById('prevBtn').disabled = currentIndex === 0;
+        document.getElementById('nextBtn').disabled = currentIndex === alphabetData.length - 1;
+        
+        // Update progress
+        updateProgress();
+        updateProgressDots();
+        
+        // Mark as learned
+        if (!learnedLetters.includes(currentIndex)) {
+            learnedLetters.push(currentIndex);
+            saveProgress();
+        }
+        
+        // Check if all learned
+        if (learnedLetters.length === alphabetData.length) {
+            document.getElementById('completeBtn').classList.remove('hidden');
+        }
+        
+        // Add animation
+        document.querySelector('.glass-morphism').classList.add('animate__animated', 'animate__pulse');
+        setTimeout(() => {
+            document.querySelector('.glass-morphism').classList.remove('animate__animated', 'animate__pulse');
+        }, 1000);
+        
+        // Auto-pronounce the letter
+        setTimeout(() => {
+            pronounceLetter();
+        }, 500);
+    }
+
+    function updateProgress() {
+        const learned = learnedLetters.length;
+        const total = alphabetData.length;
+        const percentage = (learned / total) * 100;
+        
+        document.getElementById('progressText').textContent = `${learned}/${total} learned`;
+        document.getElementById('progressBar').style.width = `${percentage}%`;
+    }
+
+    function createProgressDots() {
+        const container = document.getElementById('progressDots');
+        container.innerHTML = '';
+        
+        alphabetData.forEach((item, index) => {
+            const dot = document.createElement('button');
+            dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer';
+            dot.textContent = item.letter;
+            dot.addEventListener('click', () => {
+                playSound(600, 0.1);
+                currentIndex = index;
+                updateDisplay();
+            });
+            container.appendChild(dot);
+        });
+    }
+
+    function updateProgressDots() {
+        const dots = document.querySelectorAll('#progressDots button');
+        dots.forEach((dot, index) => {
+            if (index === currentIndex) {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-blue-500 text-white scale-125';
+            } else if (learnedLetters.includes(index)) {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-green-500 text-white';
+            } else {
+                dot.className = 'w-8 h-8 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer bg-gray-300 text-gray-700';
+            }
+        });
+    }
+
+    function previousLetter() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateDisplay();
+        }
+    }
+
+    function nextLetter() {
+        if (currentIndex < alphabetData.length - 1) {
+            currentIndex++;
+            updateDisplay();
+        }
+    }
+
+    function pronounceLetter() {
+        const currentLetter = alphabetData[currentIndex].letter;
+        
+        // Create speech synthesis
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(currentLetter);
+            utterance.rate = 0.7;
+            utterance.pitch = 1;
+            speechSynthesis.speak(utterance);
+        }
+        
+        // Sound effect
+        playSound([400, 500, 600], 0.5, 'sine');
+        
+        // Visual feedback
+        const button = document.getElementById('pronounceBtn');
+        button.classList.add('animate__animated', 'animate__pulse');
+        setTimeout(() => {
+            button.classList.remove('animate__animated', 'animate__pulse');
+        }, 1000);
+    }
+
+    function toggleAutoPlay() {
+        if (isAutoPlaying) {
+            clearInterval(autoPlayInterval);
+            isAutoPlaying = false;
+            document.getElementById('autoPlayBtn').innerHTML = '<i class="fas fa-play-circle mr-2"></i>Auto-Play';
+            playSound(400, 0.2);
+        } else {
+            isAutoPlaying = true;
+            document.getElementById('autoPlayBtn').innerHTML = '<i class="fas fa-pause-circle mr-2"></i>Stop';
+            playSound(600, 0.2);
+            
+            autoPlayInterval = setInterval(() => {
+                if (currentIndex < alphabetData.length - 1) {
+                    nextLetter();
+                } else {
+                    toggleAutoPlay();
+                }
+            }, 3000);
+        }
+    }
+
+
+
+    function bookmarkLetter() {
+        const current = alphabetData[currentIndex];
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarkedSigns') || '[]');
+        
+        if (!bookmarks.find(b => b.word === current.letter)) {
+            bookmarks.push({ word: current.letter, image: current.image, category: 'alphabets' });
+            localStorage.setItem('bookmarkedSigns', JSON.stringify(bookmarks));
+            showNotification(`⭐ Letter ${current.letter} bookmarked!`);
+        } else {
+            showNotification(`📌 Letter ${current.letter} already bookmarked!`);
+        }
+    }
+
+    function showCompletionModal() {
+        document.getElementById('completionModal').classList.remove('hidden');
+        document.getElementById('completionModal').classList.add('flex');
+        
+        // Save completion
+        const stats = JSON.parse(localStorage.getItem('learningStats') || '{}');
+        stats.alphabetsCompleted = true;
+        stats.totalSignsLearned = (stats.totalSignsLearned || 0) + 26;
+        localStorage.setItem('learningStats', JSON.stringify(stats));
+    }
+
+    function closeModal() {
+        document.getElementById('completionModal').classList.add('hidden');
+        document.getElementById('completionModal').classList.remove('flex');
+    }
+
+
+
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-8 right-8 glass-morphism rounded-2xl p-4 text-center shadow-xl z-50 animate__animated animate__slideInRight';
+        notification.innerHTML = `<div class="text-lg font-bold text-gray-800 dark:text-white">${message}</div>`;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.classList.add('animate__slideOutRight');
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
+    }
+
+    function saveProgress() {
+        localStorage.setItem('alphabetProgress', JSON.stringify(learnedLetters));
+    }
+
+    function loadProgress() {
+        const saved = localStorage.getItem('alphabetProgress');
+        if (saved) {
+            learnedLetters = JSON.parse(saved);
+            updateProgress();
+            updateProgressDots();
+        }
+    }
+</script>
+{% endblock %}
